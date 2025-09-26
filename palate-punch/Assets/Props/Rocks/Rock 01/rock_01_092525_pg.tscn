@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu1miwr0fhjr0"]
+
+[ext_resource type="PackedScene" uid="uid://iojerg63o5sg" path="res://Assets/Props/Rocks/Rock 01/rock_01_092525-pg.glb" id="1_c2ddk"]
+[ext_resource type="Material" uid="uid://dqde6db7wimrr" path="res://Resources/Textures/rockmat_.tres" id="2_htu4k"]
+
+[node name="rock_01_092525-pg" instance=ExtResource("1_c2ddk")]
+
+[node name="Plane" parent="." index="0"]
+gi_mode = 0
+surface_material_override/0 = ExtResource("2_htu4k")

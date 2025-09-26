@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://chnrc3150f51u"]
+
+[ext_resource type="Script" uid="uid://dylj2e4pjs6vx" path="res://Nodes/Door/door.gd" id="1_w6aom"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lbsgu"]
+size = Vector3(0.5, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4131"]
+albedo_color = Color(0.960575, 0.386196, 0.816643, 1)
+roughness = 0.34
+
+[sub_resource type="BoxMesh" id="BoxMesh_8b2rd"]
+material = SubResource("StandardMaterial3D_l4131")
+size = Vector3(0.1, 1, 1)
+
+[node name="Door" type="Area3D"]
+collision_layer = 4
+script = ExtResource("1_w6aom")
+target_scene = "uid://b65vm8ddowep7"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_lbsgu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_8b2rd")
+skeleton = NodePath("../CollisionShape3D")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

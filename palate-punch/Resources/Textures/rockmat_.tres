@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dqde6db7wimrr"]
+
+[ext_resource type="Texture2D" uid="uid://c7tnwoje5pkl4" path="res://Assets/Props/Rocks/Rock 01/rock_01_092525-pg_rocks_01_092325-pg.png" id="1_a05tt"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_texture = ExtResource("1_a05tt")

@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcjaat5f1s38j"]
+
+[ext_resource type="Script" uid="uid://2fb66i3lig1y" path="res://Resources/Items/apple/apple_collectable.gd" id="1_ipdwa"]
+[ext_resource type="Texture2D" uid="uid://cl2yfdrutbv12" path="res://Assets/Props/Apple 01/apple.png" id="2_o0bl3"]
+[ext_resource type="Resource" uid="uid://dejoidkuoscd7" path="res://Resources/Items/apple/apple02.tres" id="2_q74lo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q74lo"]
+
+[node name="apple_collectable" type="StaticBody3D"]
+script = ExtResource("1_ipdwa")
+item = ExtResource("2_q74lo")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_q74lo")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("2_o0bl3")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_q74lo")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
