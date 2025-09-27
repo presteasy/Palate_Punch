@@ -74,11 +74,7 @@ func _ready() -> void:
 	
 	
 func get_transition(delta):
-	print(parent.GroundL.is_colliding())
-	if parent.GroundL.is_colliding():
-		var collider = parent.GroundL.get_collider()
-		if collider:
-			print("Collided with: ", collider.name)
+	#print(parent.GroundL.is_colliding())
 	if InputHandler.current_input_mode == InputHandler.InputMode.UI:
 		return
 	else:

@@ -1,14 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://dbph8hu5b5c2e"]
+[gd_scene load_steps=11 format=3 uid="uid://dbph8hu5b5c2e"]
 
 [ext_resource type="Script" uid="uid://b7e653evmext6" path="res://Levels/Test Level/test_01.gd" id="1_l0wkj"]
 [ext_resource type="PackedScene" uid="uid://chnrc3150f51u" path="res://Nodes/Door/door.tscn" id="2_fwy8g"]
 [ext_resource type="PackedScene" uid="uid://dcjaat5f1s38j" path="res://Resources/Items/apple/apple_collectable.tscn" id="3_reab4"]
 [ext_resource type="Texture2D" uid="uid://bd5u52j4c3ixf" path="res://Assets/landscape_practice_02_050724-pg.jpg" id="4_frm6m"]
 [ext_resource type="PackedScene" uid="uid://bu1miwr0fhjr0" path="res://Assets/Props/Rocks/Rock 01/rock_01_092525_pg.tscn" id="5_7gji8"]
-[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="6_iclqc"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_unvdx"]
-[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_f2rwd"]
-[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="9_unvdx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ruoy5"]
 size = Vector3(30, 1, 5)
@@ -27,26 +23,6 @@ shading_mode = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_c02bp"]
 material = SubResource("StandardMaterial3D_7gji8")
-
-[sub_resource type="Resource" id="Resource_tgjpb"]
-script = ExtResource("8_f2rwd")
-duration = 1.0
-transition = 0
-ease = 2
-
-[sub_resource type="Resource" id="Resource_f2rwd"]
-script = ExtResource("9_unvdx")
-keep_aspect = 1
-cull_mask = 1048575
-h_offset = 0.0
-v_offset = -0.13
-projection = 0
-fov = 35.4
-size = 34.21
-frustum_offset = Vector2(0, 0)
-near = 0.001
-far = 4000.0
-metadata/_custom_type_script = "uid://b8hhnqsugykly"
 
 [node name="TestLevel01" type="Node3D"]
 script = ExtResource("1_l0wkj")
@@ -127,33 +103,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.85365, 0.285753, 1.89755)
 
 [node name="rock_01_092525-pg3" parent="." instance=ExtResource("5_7gji8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.93838, 0.285753, 6.31343)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 1.726, 11.407)
-v_offset = -0.13
-fov = 35.4
-size = 34.21
-near = 0.001
-
-[node name="PhantomCameraHost" type="Node" parent="Camera3D"]
-unique_name_in_owner = true
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("6_iclqc")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
-
-[node name="PhantomCamera3D" type="Node3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 1.726, 11.407)
-top_level = true
-script = ExtResource("7_unvdx")
-follow_mode = 5
-tween_resource = SubResource("Resource_tgjpb")
-tween_on_load = false
-camera_3d_resource = SubResource("Resource_f2rwd")
-follow_offset = Vector3(0, 0, 3)
-follow_damping = true
-follow_axis_lock = 6
-dead_zone_width = 0.494
-dead_zone_height = 0.961
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"

@@ -1,11 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://b65vm8ddowep7"]
+[gd_scene load_steps=6 format=3 uid="uid://b65vm8ddowep7"]
 
 [ext_resource type="Script" uid="uid://ckbt2x0ebhwhn" path="res://Levels/Test Level/test_level_02.gd" id="1_1nopq"]
 [ext_resource type="PackedScene" uid="uid://chnrc3150f51u" path="res://Nodes/Door/door.tscn" id="1_v64j4"]
-[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_amxaf"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_1nopq"]
-[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_le7y5"]
-[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="5_r3gyo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0xwrg"]
 size = Vector3(30, 1, 5)
@@ -16,26 +12,6 @@ albedo_color = Color(0.77, 0.1463, 0.1463, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_oalue"]
 material = SubResource("StandardMaterial3D_v64j4")
 size = Vector3(30, 1, 5)
-
-[sub_resource type="Resource" id="Resource_1nopq"]
-script = ExtResource("4_le7y5")
-duration = 1.0
-transition = 0
-ease = 2
-
-[sub_resource type="Resource" id="Resource_le7y5"]
-script = ExtResource("5_r3gyo")
-keep_aspect = 1
-cull_mask = 1048575
-h_offset = 0.0
-v_offset = 0.6
-projection = 0
-fov = 49.2
-size = 34.21
-frustum_offset = Vector2(0, 0)
-near = 0.001
-far = 4000.0
-metadata/_custom_type_script = "uid://b8hhnqsugykly"
 
 [node name="TestLevel02" type="Node3D"]
 script = ExtResource("1_1nopq")
@@ -73,33 +49,3 @@ light_specular = 0.0
 [node name="Door" parent="." instance=ExtResource("1_v64j4")]
 target_scene = "uid://dbph8hu5b5c2e"
 require_interact = true
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 1.726, 11.407)
-v_offset = 0.6
-fov = 49.2
-size = 34.21
-near = 0.001
-
-[node name="PhantomCameraHost" type="Node" parent="Camera3D"]
-unique_name_in_owner = true
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("2_amxaf")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
-
-[node name="PhantomCamera3D" type="Node3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, -4.47035e-08, 0, 4.47035e-08, 1, 0, 1.726, 11.407)
-top_level = true
-script = ExtResource("3_1nopq")
-follow_mode = 5
-tween_resource = SubResource("Resource_1nopq")
-tween_on_load = false
-camera_3d_resource = SubResource("Resource_le7y5")
-follow_offset = Vector3(0, 0, 3)
-follow_damping = true
-follow_axis_lock = 6
-dead_zone_width = 0.494
-dead_zone_height = 0.961
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"

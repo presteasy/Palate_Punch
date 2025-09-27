@@ -6,7 +6,6 @@ extends CharacterBody3D
 
 @onready var GroundL = get_node('Raycasts/GroundL')
 @onready var GroundR = get_node('Raycasts/GroundR')
-@onready var camera = %Camera3D
 @onready var anim = %AnimationPlayer
 @onready var state_label = %StateLabel
 @onready var sprite = %Sprite
@@ -74,9 +73,13 @@ var hit_pause_dur = 0
 var temp_pos = Vector3.ZERO
 var temp_vel = Vector3.ZERO
 
+func _enter_tree() -> void:
+	add_to_group("player")
+
 
 func _ready() -> void:
 	Global.player = self
+
 	
 	
 func _physics_process(delta):

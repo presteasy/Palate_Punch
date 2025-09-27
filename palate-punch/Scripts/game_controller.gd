@@ -41,6 +41,7 @@ func change_3d_scene(new_scene: String, delete: bool = true, keep_running: bool 
 	var new = load(new_scene).instantiate()
 	world_3d.add_child(new)
 	current_3d_scene = new
+	_find_player()
 	
 func change_gui_to_3d(new_scene: String, delete: bool = true, keep_running: bool = false) -> void:
 	if current_gui_scene != null:
@@ -93,7 +94,10 @@ func _find_player_spawn() -> Marker3D:
 		return nodes[0] as Marker3D
 	return null
 	
-
+func _find_player() -> void:
+	var target_player = get_tree().get_first_node_in_group("player")
+	SignalManager.emit_signal("pcam_find_player", target_player)
+	print("find player signal emitted")
 
 func spawn_player() -> void:
 	var spawn := _find_player_spawn()
@@ -105,4 +109,5 @@ func spawn_player() -> void:
 	var new_player = scene.instantiate() as CharacterBody3D
 	player_parent.add_child(new_player)
 	new_player.global_transform.origin = spawn.global_transform.origin
+	new_player.add_to_group("player")
 	SignalManager.emit_signal("player_spawned", new_player)
