@@ -1,9 +1,10 @@
-[gd_scene load_steps=65 format=3 uid="uid://oeqbt6w1xcag"]
+[gd_scene load_steps=66 format=3 uid="uid://oeqbt6w1xcag"]
 
 [ext_resource type="Script" uid="uid://1kopyvtybxil" path="res://Actors/Player Servan/player.gd" id="1_8221m"]
 [ext_resource type="Resource" uid="uid://cxf35m3jj3nr7" path="res://Resources/Items/Player Inventory/playerinventory.tres" id="2_s8vdf"]
 [ext_resource type="Script" uid="uid://n4wl06hgeu8e" path="res://Nodes/Frames/frame_data.gd" id="3_b7mwj"]
 [ext_resource type="PackedScene" uid="uid://o4mgp0x6n6j3" path="res://UI/Inventory/inventory.tscn" id="3_qkdr7"]
+[ext_resource type="Script" uid="uid://n7vl4yqrirvh" path="res://Actors/Player Servan/visual_offset.gd" id="3_sb4tc"]
 [ext_resource type="Script" uid="uid://b2pnrwdlwnahv" path="res://Actors/Player Servan/servan_state_machine.gd" id="4_6rere"]
 [ext_resource type="Texture2D" uid="uid://dpxepre20kpln" path="res://Actors/Player Servan/Animations/STAND/1.png" id="6_uqi4g"]
 [ext_resource type="Texture2D" uid="uid://cn0ads0y6u8ww" path="res://Actors/Player Servan/Animations/JUMP/servan_jump_01_091925-pg.png" id="6_vhmkq"]
@@ -367,10 +368,10 @@ tracks/2/path = NodePath(".:offset")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.0333333),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(96.83, -11.63)]
+"values": [Vector2(97.29, -13.43)]
 }
 
 [sub_resource type="Animation" id="Animation_l1n61"]
@@ -410,7 +411,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(87.98, 6.53)]
+"values": [Vector2(97.29, 11.26)]
 }
 
 [sub_resource type="Animation" id="Animation_wy3gy"]
@@ -479,18 +480,6 @@ tracks/1/keys = {
 "update": 1,
 "values": [0]
 }
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(77.51, 7.77)]
-}
 
 [sub_resource type="Animation" id="Animation_c8a24"]
 resource_name = "D_SMASH"
@@ -514,7 +503,7 @@ tracks/1/path = NodePath(".:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.196445),
+"times": PackedFloat32Array(0, 0.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [0, 1]
@@ -526,10 +515,10 @@ tracks/2/path = NodePath(".:offset")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.195755, 0.196603),
-"transitions": PackedFloat32Array(1, 1, 1e-05),
-"update": 0,
-"values": [Vector2(47.43, -69.03), Vector2(47.43, -69.03), Vector2(130.9, -116.57)]
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(76.87, -73.41), Vector2(152.22, -113.7)]
 }
 
 [sub_resource type="Animation" id="Animation_w7wk6"]
@@ -599,18 +588,6 @@ tracks/1/keys = {
 "update": 1,
 "values": [0, 1]
 }
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(116.47, -63.64), Vector2(116.47, -37.02)]
-}
 
 [sub_resource type="Animation" id="Animation_sb4tc"]
 resource_name = "NAIR"
@@ -654,7 +631,7 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id="Animation_55sbp"]
 resource_name = "PUNCH_01"
-length = 0.333335
+length = 0.166668
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -675,22 +652,22 @@ tracks/1/path = NodePath(".:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.0833333, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [1, 0, 1]
+"values": [1, 0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
+tracks/2/path = NodePath("%Sprite/..:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.0833333, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(68.014, 4.45), Vector2(138.804, -7.82), Vector2(68.014, 4.45)]
+"values": [Vector3(-0.33, 0, 0), Vector3(-0.09, -0.04, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_n3v62"]
@@ -722,26 +699,26 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
+tracks/2/path = NodePath("%Sprite/..:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(90.35, 3.45)]
+"update": 1,
+"values": [Vector3(-0.33, 0, 0)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath(".:scale")
+tracks/3/path = NodePath(".:offset")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0.37, 0.37, 0.37)]
+"values": [Vector2(97.29, 11.26)]
 }
 
 [sub_resource type="Animation" id="Animation_hlrp4"]
@@ -767,7 +744,7 @@ tracks/1/path = NodePath(".:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.0416667, 0.333333, 0.666667),
+"times": PackedFloat32Array(0, 0.333333, 0.666667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [0, 1, 2]
@@ -782,7 +759,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(91.74, -122.92)]
+"values": [Vector2(86.33, -111.31)]
 }
 
 [sub_resource type="Animation" id="Animation_t0mfi"]
@@ -810,18 +787,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(77.51, 7.77)]
 }
 
 [sub_resource type="Animation" id="Animation_uqi4g"]
@@ -855,14 +820,14 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".:offset")
+tracks/2/path = NodePath("%Sprite/..:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(90.35, 3.45)]
+"update": 1,
+"values": [Vector3(-0.33, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_llcky"]
@@ -1013,15 +978,24 @@ dash_speed = 10
 max_jump_force = 14
 double_jump_force = 10
 
-[node name="Sprite" type="AnimatedSprite3D" parent="."]
+[node name="Graphics" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.37, 0, 0, 0, 0.37, 0, 0, 0, 0.37, -0.308871, 0, 0)
-offset = Vector2(90.35, 3.45)
+
+[node name="SpritePivot" type="Node3D" parent="Graphics"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0, 0)
+script = ExtResource("3_sb4tc")
+
+[node name="Sprite" type="AnimatedSprite3D" parent="Graphics/SpritePivot"]
+unique_name_in_owner = true
+transform = Transform3D(0.37, 0, 0, 0, 0.37, 0, 0, 0, 0.37, 0, 0, 0)
+offset = Vector2(97.29, 11.26)
 sprite_frames = SubResource("SpriteFrames_vhmkq")
 animation = &"STAND"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics/SpritePivot/Sprite"]
 unique_name_in_owner = true
+callback_mode_discrete = 0
 libraries = {
 &"": SubResource("AnimationLibrary_qojnd")
 }
@@ -1034,7 +1008,9 @@ debug_color = Color(0.841144, 0.351356, 0.28334, 1)
 [node name="CrouchHurtBox" type="CollisionShape3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.30233, 0)
+visible = false
 shape = SubResource("CapsuleShape3D_xnv68")
+disabled = true
 debug_color = Color(0.735979, 0.518593, 0.698619, 1)
 
 [node name="HitboxManager" type="Node3D" parent="."]
@@ -1048,6 +1024,7 @@ monitorable = false
 radius = 0.2
 height = 0.5
 yaw_flip_on_left = false
+use_editor_position = true
 
 [node name="FrameData" type="Node" parent="."]
 unique_name_in_owner = true

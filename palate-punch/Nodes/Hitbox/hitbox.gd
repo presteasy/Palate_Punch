@@ -60,7 +60,7 @@ func _ready() -> void:
 	if hitbox_shape == null:
 		return
 	_ensure_shape()
-	_make_shape_unique()
+	#_make_shape_unique()
 	_apply_dims_to_shape()
 	_apply_transform_from_facing()
 	
@@ -205,7 +205,7 @@ func _apply_transform_from_facing() -> void:
 			
 func _refresh_gizmo() -> void:
 	if Engine.is_editor_hint() and hitbox_shape:
-		hitbox_shape.propery_list_changed_notify()
+		hitbox_shape.notify_property_list_changed()
 		hitbox_shape.update_gizmo()
 
 

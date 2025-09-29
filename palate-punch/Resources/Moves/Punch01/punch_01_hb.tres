@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_c3t3h")
 name = &"Punch_01"
-active_start = 5
-active_end = 15
+active_start = 3
+active_end = 7
 metadata/_custom_type_script = "uid://mqmpkicr15t1"

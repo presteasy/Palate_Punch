@@ -9,6 +9,8 @@ extends CharacterBody3D
 @onready var anim = %AnimationPlayer
 @onready var state_label = %StateLabel
 @onready var sprite = %Sprite
+@onready var graphics: Node3D = %Graphics
+@onready var sprite_pivot: Node3D = %SpritePivot
 @onready var framedata = %FrameData
 @onready var hurtbox = %HurtBox
 @onready var crouch_hurtbox = %CrouchHurtBox
@@ -100,30 +102,37 @@ func turn(direction: bool) -> void:
 		current_direction = 1
 		#LedgeGrabF.rotation_degrees.z = 90
 		#LedgeGrabB.rotation_degrees.z = -90
-
-	sprite.set_flip_h(direction)
+	graphics.rotation.y = PI if current_direction == -1 else 0.0
+	if sprite_pivot.has_method("set_facing_dir"):
+		sprite_pivot.set_facing_dir(current_direction)
+	#sprite.set_flip_h(direction)
 	hitbox_man.apply_dir_of_parent()
 		
 		
 
 func get_facing_dir() -> int:
 	return current_direction
+	
+func _set_hurtbox_active(shape: CollisionShape3D, active: bool) -> void:
+	if shape == null:
+		return
+	shape.set_deferred("disabled", not active)
+
+func use_stand_hurtbox() -> void:
+	call_deferred("_swap_hurtbox", hurtbox)
+	
+func use_crouch_hurtbox() -> void:
+	call_deferred("_swap_hurtbox", crouch_hurtbox)
+
+func _swap_hurtbox(target: CollisionShape3D) -> void:
+	_set_hurtbox_active(hurtbox, false)
+	_set_hurtbox_active(crouch_hurtbox, false)
+	_set_hurtbox_active(target, true)
 
 func switch_to_crouch_hurtbox(is_crouching: bool):
 	hurtbox.disabled = is_crouching
 	crouch_hurtbox.disabled = !is_crouching
 
-func use_stand_hurtbox() -> void:
-	is_crouching = false
-	hurtbox.set_deferred("disabled", false)
-	crouch_hurtbox.set_deferred("disabled", true)
-	print("Stand shape active?", not hurtbox.disabled, " | Crouch shape active? ", not crouch_hurtbox.disabled)
-
-func use_crouch_hurtbox() -> void:
-	is_crouching = true
-	hurtbox.set_deferred("disabled", true)
-	crouch_hurtbox.set_deferred("disabled", false)
-	print("Stand shape active?", not hurtbox.disabled, " | Crouch shape active? ", not crouch_hurtbox.disabled)
 
 func reset_jumps() -> void:
 	air_jump = max_jumps

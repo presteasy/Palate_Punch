@@ -82,6 +82,7 @@ func get_transition(delta):
 			
 		match state:
 			states.STAND:
+				parent.can_run = true
 				parent.reset_jumps()
 				
 				var move_x = Input.get_action_strength("right_%s" % id) - Input.get_action_strength("left_%s" % id)
@@ -141,17 +142,8 @@ func get_transition(delta):
 				#if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
 					#framedata._frame()
 					#return states.CRAWL
-				#
-				#if Input.is_action_just_pressed("l_attack_%s" % id):
-					#framedata._frame()
-					#return states.CROUCH_L_ATK
-				#elif Input.is_action_just_pressed("special_%s" % id):
-					#framedata._frame()
-					#return states.D_SPECIAL
-				#elif Input.is_action_just_pressed("h_attack_%s" % id):
-					#framedata._frame()
-					#return states.CROUCH_H_ATK
-					#
+
+
 				if not Input.is_action_pressed("down_%s" % id):
 					parent.use_stand_hurtbox()
 					framedata._frame()
@@ -351,9 +343,15 @@ func get_transition(delta):
 									#if not parent.can_run:
 										#framedata._frame()
 										#return states.STAND
+				
+				if Input.is_action_just_pressed("attack_%s" % id):
+						framedata._frame()
+						return states.PUNCH_01
+				
 				else:
 					framedata._frame()
-					return states.AIR
+					return states.STAND
+				
 					
 			states.RUN:
 				if Input.is_action_just_pressed("jump_%s" % id):
@@ -786,9 +784,9 @@ func get_transition(delta):
 				
 	#====== GROUNDED ATKS ======
 			states.PUNCH_01:
+				parent.can_run = false
 				var finished = atk_runner.step()
 				if finished:
-					framedata._frame()
 					return states.STAND
 
 			states.F_SMASH:
