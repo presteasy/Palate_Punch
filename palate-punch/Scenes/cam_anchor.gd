@@ -19,14 +19,22 @@ func _physics_process(delta: float) -> void:
 	if _target == null:
 		return
 	var tpos := _target.global_position
+	
 	var lower := _baseline_y - dz_down
 	var upper := _baseline_y + dz_up
+	
 	if tpos.y > upper:
 		_baseline_y = tpos.y - dz_up
 	elif tpos.y < lower:
 		_baseline_y = tpos.y + dz_down
 	else:
-		_baseline_y = max(min_y, _baseline_y- baseline_return * delta)
+		var target_baseline = max(min_y, tpos.y)
+		_baseline_y = move_toward(_baseline_y, target_baseline, baseline_return * delta)
+	
+	if _target.has_method("is_on_floor") and _target.is_on_floor():
+		_baseline_y = max(min_y, tpos.y)
+	
+	_baseline_y = max(min_y, _baseline_y)
 	
 	var desired := Vector3(tpos.x, max(min_y, _baseline_y), fixed_z)
 	var a := 1.0 - pow(0.001, delta * follow_speed)

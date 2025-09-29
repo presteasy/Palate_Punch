@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://oeqbt6w1xcag"]
+[gd_scene load_steps=65 format=3 uid="uid://oeqbt6w1xcag"]
 
 [ext_resource type="Script" uid="uid://1kopyvtybxil" path="res://Actors/Player Servan/player.gd" id="1_8221m"]
 [ext_resource type="Resource" uid="uid://cxf35m3jj3nr7" path="res://Resources/Items/Player Inventory/playerinventory.tres" id="2_s8vdf"]
@@ -34,9 +34,14 @@
 [ext_resource type="Texture2D" uid="uid://ygwbxxvi6dpe" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm02_092225-pg.png" id="32_6vudm"]
 [ext_resource type="Texture2D" uid="uid://cqj7xnr4rdo4u" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm03_092225-pg.png" id="33_2pdl7"]
 [ext_resource type="Texture2D" uid="uid://0ipv76o43sn8" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm04_092225-pg.png" id="34_f5bl3"]
+[ext_resource type="Script" uid="uid://bt15gxf4isj5k" path="res://Nodes/Hitbox/hitbox_manager.gd" id="35_64vj2"]
 [ext_resource type="Texture2D" uid="uid://cgdmye80bjtai" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm05_092225-pg.png" id="35_ye6y8"]
 [ext_resource type="Texture2D" uid="uid://dxs52oonrmkn2" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm06_092225-pg.png" id="36_ip00i"]
+[ext_resource type="PackedScene" uid="uid://b8dubvntuc0hg" path="res://Nodes/Hitbox/hitbox.tscn" id="36_wy3gy"]
 [ext_resource type="Texture2D" uid="uid://nl1jx3d0w4p4" path="res://Actors/Player Servan/Animations/UP_SMASH/usmash_frm07_092225-pg.png" id="37_at71f"]
+[ext_resource type="Script" uid="uid://cklwn3hkjwdog" path="res://Nodes/AttackRunner/attack_runner.gd" id="39_wk4yc"]
+[ext_resource type="Script" uid="uid://de4wwqo5oi6qs" path="res://Resources/Moves/move_spec.gd" id="40_sb4tc"]
+[ext_resource type="Resource" uid="uid://dojklqxil4jop" path="res://Resources/Moves/Punch01/punch_01.tres" id="41_hlrp4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vhmkq"]
 animations = [{
@@ -146,6 +151,9 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("9_f27lj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_uqi4g")
 }],
 "loop": true,
 "name": &"PUNCH01",
@@ -646,6 +654,8 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id="Animation_55sbp"]
 resource_name = "PUNCH_01"
+length = 0.333335
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -656,7 +666,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"PUNCH_01"]
+"values": [&"PUNCH01"]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -665,10 +675,10 @@ tracks/1/path = NodePath(".:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.0833333, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [0]
+"values": [1, 0, 1]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -677,10 +687,10 @@ tracks/2/path = NodePath(".:offset")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.0333333),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(190, -20)]
+"times": PackedFloat32Array(0, 0.0833333, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [Vector2(68.014, 4.45), Vector2(138.804, -7.82), Vector2(68.014, 4.45)]
 }
 
 [sub_resource type="Animation" id="Animation_n3v62"]
@@ -1027,6 +1037,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.30233, 0)
 shape = SubResource("CapsuleShape3D_xnv68")
 debug_color = Color(0.735979, 0.518593, 0.698619, 1)
 
+[node name="HitboxManager" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("35_64vj2")
+
+[node name="Punch_01" parent="HitboxManager" instance=ExtResource("36_wy3gy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.856346, 0.367005, 0)
+disable_mode = 2
+monitorable = false
+radius = 0.2
+height = 0.5
+yaw_flip_on_left = false
+
 [node name="FrameData" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_b7mwj")
@@ -1035,6 +1057,15 @@ metadata/_custom_type_script = "uid://n4wl06hgeu8e"
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("framedata")]
 script = ExtResource("4_6rere")
 framedata = NodePath("../FrameData")
+
+[node name="AttackRunner" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("39_wk4yc")
+hitbox_manager_path = NodePath("../HitboxManager")
+framedata_path = NodePath("../FrameData")
+user_path = NodePath("..")
+moves = Array[ExtResource("40_sb4tc")]([ExtResource("41_hlrp4")])
+metadata/_custom_type_script = "uid://cklwn3hkjwdog"
 
 [node name="InventoryUI" parent="." instance=ExtResource("3_qkdr7")]
 process_mode = 3

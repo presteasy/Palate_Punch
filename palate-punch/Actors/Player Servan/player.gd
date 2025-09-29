@@ -12,6 +12,7 @@ extends CharacterBody3D
 @onready var framedata = %FrameData
 @onready var hurtbox = %HurtBox
 @onready var crouch_hurtbox = %CrouchHurtBox
+@onready var hitbox_man = %HitboxManager
 
 @export var speed = 14
 @export var fall_acceleration = 75
@@ -19,8 +20,10 @@ var target_velocity = Vector3.ZERO
 
 #Global Variables
 @export var id : int
+@export var character_type: String = "player"
 var current_direction: int = 1
 var self_state
+
 
 
 #KnockBack
@@ -88,8 +91,7 @@ func _physics_process(delta):
 	
 
 
-func turn(direction):
-	current_direction = 0
+func turn(direction: bool) -> void:
 	if direction:
 		current_direction = -1
 		#LedgeGrabF.rotation_degrees.z = -90
@@ -100,6 +102,12 @@ func turn(direction):
 		#LedgeGrabB.rotation_degrees.z = -90
 
 	sprite.set_flip_h(direction)
+	hitbox_man.apply_dir_of_parent()
+		
+		
+
+func get_facing_dir() -> int:
+	return current_direction
 
 func switch_to_crouch_hurtbox(is_crouching: bool):
 	hurtbox.disabled = is_crouching

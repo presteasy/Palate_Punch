@@ -86,13 +86,13 @@ transform = Transform3D(0.32, 0, 0, 0, 0.32, 0, 0, 0, 0.32, 3.67504, -0.125333, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.10189, 0.255984, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(39.6, 0, 0, 0, -4.37114e-07, -16.8, 0, 10, -7.34352e-07, 0, -0.588191, -29.3313)
+transform = Transform3D(32.6178, 0, 0, 0, -4.37114e-07, -12.9952, 0, 10, -5.68039e-07, 0, 3.63982, -18.119)
 gi_mode = 0
 mesh = SubResource("PlaneMesh_c02bp")
 
 [node name="Decal" type="Decal" parent="MeshInstance3D"]
-transform = Transform3D(1.62062, 0, 0, 0, 1, 7.10543e-15, 0, -3.55271e-15, 1.28101, -0.0086189, 0, -0.292958)
-size = Vector3(2, 0.001, 2)
+transform = Transform3D(1.61225, 0, 0, 0, 0.994834, 1.77636e-14, 0, -3.55271e-15, 0.83121, 0.000588551, 0, -0.115608)
+size = Vector3(1.22713, 0.001, 2.07568)
 texture_albedo = ExtResource("4_frm6m")
 
 [node name="rock_01_092525-pg" parent="." instance=ExtResource("5_7gji8")]

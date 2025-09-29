@@ -2,74 +2,64 @@ extends StateMachine
 class_name StateMachineServan
 
 @onready var id = get_parent().id
+@onready var atk_runner: AttackRunner = %AttackRunner
 
 @export_group("Nodes")
 @export var framedata : FrameData
 
-
-
 func _ready() -> void:
 	add_state('STAND')
 	add_state('CROUCH')
-	add_state('HITFREEZE')
-	add_state('HITSTUN')
+	add_state('HITFREEZE') #Todo
+	add_state('HITSTUN') #Todo
 	#GROUNDED MOVEMENT
 	add_state('DASH')
-	add_state('RUN')
+	add_state('RUN') #Todo
 	add_state('TURN')
-	add_state('WALK')
-	add_state('CRAWL')
+	add_state('WALK') #Todo
+	add_state('CRAWL') #Todo
 	#AERIAL MOVEMENT
 	add_state('JUMP_SQUAT')
 	add_state('SHORT_HOP')
 	add_state('FULL_HOP')
 	add_state('AIR')
-	add_state('LANDING')
+	add_state('LANDING') #Todo
 	add_state('FREE_FALL')
 	#Ledge Options
-	add_state('LEDGE_CATCH')
-	add_state('LEDGE_HOLD')
-	add_state('LEDGE_CLIMB')
-	add_state('LEDGE_JUMP')
-	add_state('LEDGE_ROLL')
-	add_state('LEDGE_ATK')
+	add_state('LEDGE_CATCH') #Todo
+	add_state('LEDGE_HOLD') #Todo
+	add_state('LEDGE_CLIMB') #Todo
+	add_state('LEDGE_JUMP') #Todo
+	add_state('LEDGE_ROLL') #Todo
+	add_state('LEDGE_ATK') #Todo
 	#Defensive Options
-	add_state('CROUCH_BLOCK')
+	add_state('CROUCH_BLOCK') #Todo
 	add_state('BLOCK')
 	add_state('ROLL_LEFT')
 	add_state('ROLL_RIGHT')
 	#Grounded ATK
-	add_state('L_ATK')
-	add_state('L_ATK_2')
-	add_state('L_ATK_3')
-	add_state('L_UTILT')
-	add_state('CROUCH_L_ATK')
-	add_state('L_DASH_ATK')
-	add_state('H_ATK')
-	add_state('H_UTILT')
-	add_state('CROUCH_H_ATK')
-	add_state('H_DASH_ATK')
+	add_state('PUNCH_01')
+	add_state('F_SMASH')
+	add_state('U_SMASH')
+	add_state('D_SMASH')
+	add_state('F_TILT')
+	add_state('U_TILT')
+	add_state('D_TILT')
 	#Aerial ATK
-	add_state('AIR_ATK')
-	add_state('L_NAIR')
-	add_state('L_FAIR')
-	add_state('L_BAIR')
-	add_state('L_UAIR')
-	add_state('L_DAIR')
-	add_state('H_NAIR')
-	add_state('H_FAIR')
-	add_state('H_BAIR')
-	add_state('H_UAIR')
-	add_state('H_DAIR')
+	add_state('NAIR')
+	add_state('FAIR')
+	add_state('BAIR')
+	add_state('UAIR')
+	add_state('DAIR')
 	#Special ATK
-	add_state('N_SPECIAL')
-	add_state('F_SPECIAL')
-	add_state('U_SPECIAL')
-	add_state('D_SPECIAL')
-	add_state('JUMP_N_SPECIAL')
-	add_state('JUMP_F_SPECIAL')
-	add_state('JUMP_U_SPECIAL')
-	add_state('JUMP_D_SPECIAL')
+	add_state('N_SPECIAL') #Todo
+	add_state('F_SPECIAL') #Todo
+	add_state('U_SPECIAL') #Todo
+	add_state('D_SPECIAL') #Todo
+	add_state('JUMP_N_SPECIAL') #Todo
+	add_state('JUMP_F_SPECIAL') #Todo
+	add_state('JUMP_U_SPECIAL') #Todo
+	add_state('JUMP_D_SPECIAL') #Todo
 	call_deferred("set_state", states.STAND)
 	
 	
@@ -123,9 +113,12 @@ func get_transition(delta):
 				#if Input.is_action_just_pressed("special_%s" % id):
 					#parent._frame()
 					#return states.N_SPECIAL
-				#if Input.is_action_just_pressed("h_attack_%s" % id):
-					#parent._frame()
-					#return states.H_ATK
+				if Input.is_action_just_pressed("attack_%s" % id):
+					var spec = atk_runner.get_spec("Punch_01")
+					if spec != null:
+						atk_runner.start_move(spec)
+						framedata._frame()
+						return states.PUNCH_01
 					
 				if Input.is_action_pressed("down_%s" % id):
 					framedata._frame()
@@ -400,15 +393,12 @@ func get_transition(delta):
 				
 				
 				
-				#if Input.is_action_just_pressed("l_attack_%s" % id):
-					#framedata._frame()
-					#return states.L_ATK
+				if Input.is_action_just_pressed("attack_%s" % id):
+					framedata._frame()
+					return states.PUNCH_01
 				#if Input.is_action_just_pressed("special_%s" % id):
 					#framedata._frame()
 					#return states.F_SPECIAL
-				#if Input.is_action_just_pressed("h_attack_%s" % id):
-					#framedata._frame()
-					#return states.H_ATK				
 
 			states.TURN:
 				if Input.is_action_just_pressed("jump_%s" % id):
@@ -520,14 +510,11 @@ func get_transition(delta):
 						parent.velocity.x = -parent.max_air_speed
 					elif Input.is_action_pressed("right_%s" % id):
 						parent.velocity.x = parent.max_air_speed
-				#
-				##Air Attacks
-				#if Input.is_action_just_pressed("l_attack_%s" % id):
-					#framedata._frame()
-					#return states.L_NAIR
-				#if Input.is_action_just_pressed("h_attack_%s" % id):
-					#framedata._frame()
-					#return states.H_NAIR
+						
+				#Air Attacks
+				if Input.is_action_just_pressed("attack_%s" % id):
+					framedata._frame()
+					return states.NAIR
 				
 			states.LANDING: 
 				if framedata.frame <= framedata.landing_frames + framedata.lag_frames:
@@ -798,135 +785,36 @@ func get_transition(delta):
 				return
 				
 	#====== GROUNDED ATKS ======
-			states.L_ATK:
+			states.PUNCH_01:
+				var finished = atk_runner.step()
+				if finished:
+					framedata._frame()
+					return states.STAND
+
+			states.F_SMASH:
 				return
-				#if framedata.frame == 0:
-					#atk.L_ATK()
-					#parent.combo_start_time = Time.get_ticks_msec()
-					#parent.last_punch_time = Time.get_ticks_msec()
-					#parent.movement_damper = 0.5
-					#pass
-					#
-				#move.punch_traction()
-				#
-				#if Time.get_ticks_msec() - parent.last_punch_time > parent.combo_reset_time * 1000:
-					#reset_combo()
-	#
-				#if atk.L_ATK() == true:
-					#if is_within_combo_window() and Input.is_action_just_pressed("l_attack_%s" % id):
-						#framedata._frame()
-						#return states.L_ATK_2
-					#else:
-						#framedata._frame()
-						#parent.movement_damper = 1.0
-						#parent.can_run = true
-						#return states.STAND
-						
-			states.L_ATK_2:
-				return
-				#if Time.get_ticks_msec() - parent.last_punch_time > parent.combo_reset_time * 1000:
-					#reset_combo()
-				#if framedata.frame == 0:
-					#atk.L_ATK_2()
-					#parent.last_punch_time = Time.get_ticks_msec()
-					#pass
-				#move.punch_traction()
-				#if atk.L_ATK_2() == true:
-					#if is_within_combo_window() and Input.is_action_just_pressed("l_attack_%s" % id):
-						#framedata._frame()
-						#return states.L_ATK_3
-					#else:
-						#framedata._frame()
-						#return states.STAND
 			
-			states.L_ATK_3:
+			states.U_SMASH:
 				return
-				#if Time.get_ticks_msec() - parent.last_punch_time > parent.combo_reset_time * 1000:
-					#reset_combo()
-				#if framedata.frame == 0:
-					#atk.L_ATK_3()
-					#parent.last_punch_time = Time.get_ticks_msec()
-					#pass
-	#
-				#move.punch_traction()
-				#if atk.L_ATK_3() == true:
-						#framedata._frame()
-						#return states.STAND
-							
-			states.L_UTILT:
+			
+			states.D_SMASH:
 				return
-				
-			states.CROUCH_L_ATK:
+			
+			states.F_TILT:
 				return
-				#if framedata.frame == 0:
-					#atk.CROUCH_L_ATK()
-					#pass
-				#if framedata.frame >= 1:
-					#if parent.velocity.x > 0:
-						#parent.velocity.x += -parent.traction*3
-						#parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
-					#elif parent.velocity.x < 0:
-						#parent.velocity.x += parent.traction*3
-						#parent.velocity.x = clampf(parent.velocity.x,parent.velocity.x,0)
-				#if atk.CROUCH_L_ATK() == true:
-					#if Input.is_action_pressed("down_%s" % id) && framedata.frame >= 10:
-						#framedata._frame()
-						#return states.CROUCH
-					#else:
-						#framedata._frame()
-						#parent.can_run = true
-						#return states.STAND
-				
-			states.L_DASH_ATK:
-				return
-				
-			states.H_ATK:
-				return
-				#if framedata.frame == 0:
-					#atk.H_ATK()
-					#pass
-					#
-				#move.punch_traction()
-				#
-				#if atk.H_ATK() == true:
-					#if framedata.frame >= 40:
-						#framedata._frame()
-						#parent.can_run = true
-						#return states.STAND
-						
-			states.H_UTILT:
+			
+			states.U_TILT:
 				return
 
-			states.CROUCH_H_ATK:
+			states.D_TILT:
 				return
-				#if framedata.frame == 0:
-					#atk.CROUCH_H_ATK()
-					#pass
-				#if framedata.frame >= 1:
-					#if parent.velocity.x > 0:
-						#parent.velocity.x += -parent.traction*3
-						#parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
-					#elif parent.velocity.x < 0:
-						#parent.velocity.x += parent.traction*3
-						#parent.velocity.x = clampf(parent.velocity.x,parent.velocity.x,0)
-				#if atk.CROUCH_H_ATK() == true:
-					#if Input.is_action_pressed("down_%s" % id) && framedata.frame >= 15:
-						#framedata._frame()
-						#return states.CROUCH
-					#else:
-						#framedata._frame()
-						#parent.can_run = true
-						#return states.STAND
-			
-			states.H_DASH_ATK:
-				return
+				
 				
 	# ====== AERIAL ATKS ======
-			states.AIR_ATK:
-				return
 
-			states.L_NAIR:
-				return
+
+			#states.L_NAIR:
+				#return
 				#AIRMOVEMENT()
 				#if framedata.frame == 0:
 					#atk.JUMP_L_ATK()
@@ -939,49 +827,23 @@ func get_transition(delta):
 					#parent.reset_jumps()
 					#parent.velocity.y = 0
 					#return states.LANDING
-					
-			states.L_FAIR:
-				return
-				
-			states.L_BAIR:
+
+			states.NAIR:
 				return
 
-			states.L_UAIR:
+			states.FAIR:
 				return
 				
-			states.L_DAIR:
+			states.BAIR:
+				return
+
+			states.UAIR:
 				return
 				
-			states.H_NAIR:
-				return
-				#AIRMOVEMENT()
-				#if framedata.frame == 0:
-					#atk.JUMP_H_ATK()
-					#pass
-				#if atk.JUMP_H_ATK() == true:
-					#if framedata.frame >= 40:
-						#framedata._frame()
-						#return states.AIR
-				#if parent.is_on_floor():
-					#if framedata.frame < 40:
-						#parent.reset_jumps()
-						#parent.velocity.y = 0
-						#parent.velocity.x = 0
-					#elif framedata.frame >= 40:
-						#framedata._frame()
-						#return states.STAND
-
-			states.H_FAIR:
-				return
-
-			states.H_BAIR:
+			states.DAIR:
 				return
 				
-			states.H_UAIR:
-				return
 
-			states.H_DAIR:
-				return
 				
 	#====== SPECIAL ATKS ======
 			states.N_SPECIAL:
@@ -1041,7 +903,8 @@ func enter_state(new_state, old_state):
 		states.LANDING:
 			pass
 		states.FREE_FALL:
-			pass
+			parent.play_animation("ROLL")
+			parent.state_label.text = str("FREE_FALL")
 #====== LEDGE OPTIONS ======
 		states.LEDGE_CATCH:
 			pass
@@ -1055,7 +918,8 @@ func enter_state(new_state, old_state):
 			pass
 #====== DEFENSIVE OPTIONS ======
 		states.BLOCK:
-			pass
+			parent.play_animation("BLOCK")
+			parent.state_label.text = str("BLOCK")
 		states.ROLL_LEFT:
 			pass
 		states.ROLL_RIGHT:
@@ -1063,43 +927,41 @@ func enter_state(new_state, old_state):
 		states.CROUCH_BLOCK:
 			pass
 #====== GROUNDED ATKS ======
-		states.L_ATK:
+		states.PUNCH_01:
+			var spec = atk_runner.get_spec("PUNCH_01")
+			atk_runner.start_move(spec)
+			parent.state_label.text = str("PUNCH_01")
+		states.F_SMASH:
+			parent.play_animation("F_SMASH")
+			parent.state_label.text = str("F_SMASH")
+		states.D_SMASH:
+			parent.play_animation("D_SMASH")
+			parent.state_label.text = str("D_SMASH")
+		states.U_SMASH:
+			parent.play_animation("UP_SMASH")
+			parent.state_label.text = str("UP_SMASH")
+		states.F_TILT:
 			pass
-		states.L_ATK_2:
+		states.D_TILT:
 			pass
-		states.L_ATK_3:
-			pass
-		states.CROUCH_L_ATK:
-			pass
-		states.L_UTILT:
-			pass
-		states.H_ATK:
-			pass
-		states.CROUCH_H_ATK:
-			pass
-		states.H_UTILT:
+		states.U_TILT:
 			pass
 #====== AIREAL ATKS ======
-		states.L_NAIR:
-			pass
-		states.L_FAIR:
-			pass
-		states.L_BAIR:
-			pass
-		states.L_UAIR:
-			pass
-		states.L_DAIR:
-			pass
-		states.H_NAIR:
-			pass
-		states.H_FAIR:
-			pass
-		states.H_BAIR:
-			pass
-		states.H_UAIR:
-			pass
-		states.H_DAIR:
-			pass
+		states.NAIR:
+			parent.play_animation("NAIR")
+			parent.state_label.text = str("NAIR")
+		states.FAIR:
+			parent.play_animation("FAIR")
+			parent.state_label.text = str("FAIR")
+		states.BAIR:
+			parent.play_animation("BAIR")
+			parent.state_label.text = str("BAIR")
+		states.UAIR:
+			parent.play_animation("UPAIR")
+			parent.state_label.text = str("UPAIR")
+		states.DAIR:
+			parent.play_animation("DAIR")
+			parent.state_label.text = str("DAIR")
 #====== SPECIAL ATKS ======
 		states.N_SPECIAL:
 			pass
@@ -1171,7 +1033,7 @@ func Falling():
 			return true
 
 func Landing():
-	if state_includes([states.AIR,states.L_NAIR,states.H_NAIR,states.FREE_FALL]):
+	if state_includes([states.AIR,states.NAIR,states.FREE_FALL]):
 		if (parent.GroundL.is_colliding() or parent.GroundR.is_colliding()) and parent.velocity.y <= 0:
 			framedata.frame = 0
 			if parent.velocity.y < 0:

@@ -51,10 +51,12 @@ script = ExtResource("2_ynf5e")
 [node name="CamAnchor" type="Node3D" parent="World3D/Cameras"]
 unique_name_in_owner = true
 script = ExtResource("2_6bp64")
+min_y = 1.0
+follow_speed = 10.0
 
 [node name="PhantomCamera3D" type="Node3D" parent="World3D/Cameras" node_paths=PackedStringArray("follow_target")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 top_level = true
 script = ExtResource("3_6bp64")
 follow_mode = 5
@@ -62,14 +64,14 @@ follow_target = NodePath("../CamAnchor")
 tween_resource = SubResource("Resource_ynf5e")
 camera_3d_resource = SubResource("Resource_hptm8")
 attributes = SubResource("CameraAttributesPhysical_ynf5e")
-follow_offset = Vector3(0, 0, 3)
+follow_offset = Vector3(0, 0, 6)
 follow_damping = true
-dead_zone_width = 0.889
+dead_zone_width = 1.0
 dead_zone_height = 1.0
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="Camera3D" type="Camera3D" parent="World3D/Cameras"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 attributes = SubResource("CameraAttributesPhysical_hptm8")
 v_offset = 1.0
 
