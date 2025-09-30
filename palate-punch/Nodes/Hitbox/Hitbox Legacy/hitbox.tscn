@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8dubvntuc0hg"]
+
+[ext_resource type="Script" uid="uid://333wojd6idtb" path="res://Nodes/Hitbox/Hitbox Legacy/hitbox.gd" id="1_6cam7"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6cam7"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6cam7"]
+
+[node name="Hitbox" type="Area3D"]
+visible = false
+collision_layer = 0
+collision_mask = 8
+monitoring = false
+monitorable = false
+script = ExtResource("1_6cam7")
+radius = 0.5
+height = 2.0
+depth = 0.0
+
+[node name="HitboxShape" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CapsuleShape3D_6cam7")
+disabled = true
+debug_color = Color(0, 0.595, 0.7, 1)
+
+[node name="DebugMesh" type="MeshInstance3D" parent="HitboxShape"]
+visible = false
+mesh = SubResource("CapsuleMesh_6cam7")

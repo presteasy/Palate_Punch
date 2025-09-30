@@ -37,6 +37,7 @@ func update_frames(delta: float) -> void:
 	
 	cooldown -= floor(delta * 60)
 	cooldown = clampi(cooldown, 0, cooldown)
+	
 	if not Input.is_action_pressed("block_%s" % parent.id):
 		shield_buffer = 0
 	elif Input.is_action_pressed("block_%s" % parent.id):
@@ -51,21 +52,14 @@ func apply_freeze_frames(duration: int) -> void:
 	
 func _frame() -> void:
 	frame = 0
-	if anim and timeline_on:
-		anim.seek(0.0, true)
 	
 func _physics_process(delta: float) -> void:
 	if freeze_frames > 0:
 		freeze_frames -= 1
 		return
+	update_frames(delta)
 	
-	global_frame += 1
-	
-	frame += 1
-	
-	if timeline_on:
-		if anim:
-			anim.seek(float(frame) / FPS, true)
+
 	
 	
 	

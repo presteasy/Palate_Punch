@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Attacks" load_steps=2 format=3 uid="uid://cv6gxajcyxdk0"]
+
+[ext_resource type="Script" uid="uid://bk4hnjp0ffakm" path="res://Resources/Moves/Attacks/attacks.gd" id="1_k6e3b"]
+
+[resource]
+script = ExtResource("1_k6e3b")
+name = &"PUNCH_01"
+owner_type = "player"
+radius = 0.25
+height = 0.5
+depth = 0.0
+damage = 8
+angle = 45
+base_kb = 3
+kb_scaling = 5
+duration = 3
+type = "normal"
+points = Vector3(0.674, 0.134, 0)
+angle_flipper = 0
+hitlag = 1
+frame_start = 3
+frame_end = 10
+metadata/_custom_type_script = "uid://bk4hnjp0ffakm"

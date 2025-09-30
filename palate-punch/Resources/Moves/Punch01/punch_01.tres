@@ -14,5 +14,5 @@ active_end = 7
 recovery_end = 10
 hitboxes = Array[ExtResource("1_uedw0")]([ExtResource("2_b8jbr")])
 can_move_during = "none"
-can_turn_on_startup = true
+can_turn_on_startup = false
 metadata/_custom_type_script = "uid://de4wwqo5oi6qs"

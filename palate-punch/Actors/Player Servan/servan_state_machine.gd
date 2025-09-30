@@ -2,7 +2,7 @@ extends StateMachine
 class_name StateMachineServan
 
 @onready var id = get_parent().id
-@onready var atk_runner: AttackRunner = %AttackRunner
+@onready var hb_atk_runner: Node3D = %HitboxATKRunner
 
 @export_group("Nodes")
 @export var framedata : FrameData
@@ -115,9 +115,6 @@ func get_transition(delta):
 					#parent._frame()
 					#return states.N_SPECIAL
 				if Input.is_action_just_pressed("attack_%s" % id):
-					var spec = atk_runner.get_spec("Punch_01")
-					if spec != null:
-						atk_runner.start_move(spec)
 						framedata._frame()
 						return states.PUNCH_01
 					
@@ -136,20 +133,15 @@ func get_transition(delta):
 				
 						
 			states.CROUCH:
-				parent.use_crouch_hurtbox()
-				parent.can_run = false
-				#
 				#if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
 					#framedata._frame()
 					#return states.CRAWL
 
-
 				if not Input.is_action_pressed("down_%s" % id):
-					parent.use_stand_hurtbox()
 					framedata._frame()
 					parent.can_run = true
 					return states.STAND
-					#
+
 				#if Input.is_action_pressed("block_%s" % id):
 					#framedata._frame()
 					#parent.can_run = false
@@ -202,26 +194,27 @@ func get_transition(delta):
 				
 	#====== DEFENSIVE OPTIONS ======
 			states.BLOCK:
-				emit_signal("entered_invulnerable_state")
-				parent.switch_to_crouch_collision(false)
-				parent.can_run = false
-				
-				if not Input.is_action_pressed("block_%s" % id):
-					emit_signal("exited_invulnerable_state")
-					framedata._frame()
-					parent.can_run = true
-					return states.STAND
-					
-				if Input.is_action_pressed("down_%s" % id):
-					framedata._frame()
-					return states.CROUCH_BLOCK
-				
-				if Input.is_action_pressed("left_%s" % id):
-					framedata._frame()
-					return states.ROLL_LEFT
-				if Input.is_action_pressed("right_%s" % id):
-					framedata._frame()
-					return states.ROLL_RIGHT
+				return
+				#emit_signal("entered_invulnerable_state")
+				#parent.switch_to_crouch_collision(false)
+				#parent.can_run = false
+				#
+				#if not Input.is_action_pressed("block_%s" % id):
+					#emit_signal("exited_invulnerable_state")
+					#framedata._frame()
+					#parent.can_run = true
+					#return states.STAND
+					#
+				#if Input.is_action_pressed("down_%s" % id):
+					#framedata._frame()
+					#return states.CROUCH_BLOCK
+				#
+				#if Input.is_action_pressed("left_%s" % id):
+					#framedata._frame()
+					#return states.ROLL_LEFT
+				#if Input.is_action_pressed("right_%s" % id):
+					#framedata._frame()
+					#return states.ROLL_RIGHT
 				
 			states.ROLL_LEFT:
 				parent.can_run = true
@@ -785,9 +778,14 @@ func get_transition(delta):
 	#====== GROUNDED ATKS ======
 			states.PUNCH_01:
 				parent.can_run = false
-				var finished = atk_runner.step()
-				if finished:
-					return states.STAND
+				if framedata.frame == 0:
+					hb_atk_runner.PUNCH_01()
+					pass
+				if hb_atk_runner.PUNCH_01() == true:
+					if framedata.frame >= 10:
+						framedata._frame()
+						parent.can_run = true
+						return states.STAND
 
 			states.F_SMASH:
 				return
@@ -926,8 +924,7 @@ func enter_state(new_state, old_state):
 			pass
 #====== GROUNDED ATKS ======
 		states.PUNCH_01:
-			var spec = atk_runner.get_spec("PUNCH_01")
-			atk_runner.start_move(spec)
+			parent.play_animation("PUNCH_01")
 			parent.state_label.text = str("PUNCH_01")
 		states.F_SMASH:
 			parent.play_animation("F_SMASH")
@@ -978,10 +975,106 @@ func enter_state(new_state, old_state):
 		states.JUMP_D_SPECIAL:
 			pass
 
+func state_logic(_delta):
+		return
+		
 
 
 func exit_state(old_state, new_state):
-	pass
+	match new_state:
+		states.STAND:
+			pass
+		states.CROUCH:
+			pass
+		states.HITSTUN:
+			pass
+#====== MOVEMENT ======
+		states.DASH:
+			pass
+		states.TURN:
+			pass
+		states.RUN:
+			pass
+		states.WALK:
+			pass
+		states.CRAWL:
+			pass
+#====== AIREAL MOVEMENT ======
+		states.JUMP_SQUAT:
+			pass
+		states.SHORT_HOP:
+			pass
+		states.FULL_HOP:
+			pass
+		states.AIR:
+			pass
+		states.LANDING:
+			pass
+		states.FREE_FALL:
+			pass
+#====== LEDGE OPTIONS ======
+		states.LEDGE_CATCH:
+			pass
+		states.LEDGE_HOLD:
+			pass
+		states.LEDGE_CLIMB:
+			pass
+		states.LEDGE_JUMP:
+			pass
+		states.LEDGE_ROLL:
+			pass
+#====== DEFENSIVE OPTIONS ======
+		states.BLOCK:
+			pass
+		states.ROLL_LEFT:
+			pass
+		states.ROLL_RIGHT:
+			pass
+		states.CROUCH_BLOCK:
+			pass
+#====== GROUNDED ATKS ======
+		states.PUNCH_01:
+			pass
+		states.F_SMASH:
+			pass
+		states.D_SMASH:
+			pass
+		states.U_SMASH:
+			pass
+		states.F_TILT:
+			pass
+		states.D_TILT:
+			pass
+		states.U_TILT:
+			pass
+#====== AIREAL ATKS ======
+		states.NAIR:
+			pass
+		states.FAIR:
+			pass
+		states.BAIR:
+			pass
+		states.UAIR:
+			pass
+		states.DAIR:
+			pass
+#====== SPECIAL ATKS ======
+		states.N_SPECIAL:
+			pass
+		states.F_SPECIAL:
+			pass
+		states.U_SPECIAL:
+			pass
+		states.D_SPECIAL:
+			pass
+		states.JUMP_N_SPECIAL:
+			pass
+		states.JUMP_F_SPECIAL:
+			pass
+		states.JUMP_U_SPECIAL:
+			pass
+		states.JUMP_D_SPECIAL:
+			pass
 
 func state_includes(state_array):
 	for each_state in state_array:

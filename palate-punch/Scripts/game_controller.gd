@@ -111,3 +111,15 @@ func spawn_player() -> void:
 	new_player.global_transform.origin = spawn.global_transform.origin
 	new_player.add_to_group("player")
 	SignalManager.emit_signal("player_spawned", new_player)
+
+func debug_dump_all_shapes(tag := "") -> void:
+	var shapes = get_tree().get_nodes_in_group("")
+	print("\n=== SHAPE DUMP", tag, " ===")
+	for n in shapes:
+		if n is CollisionShape3D:
+			var cs := n as CollisionShape3D
+			prints(
+				cs.get_path(),
+				"disabled=", cs.disabled,
+				"global=", cs.global_transform.origin
+			)

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://pwefamq1ssts"]
+
+[ext_resource type="PackedScene" uid="uid://oeqbt6w1xcag" path="res://Actors/Player Servan/Servan.tscn" id="1_33lru"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0p631"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0psqp"]
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.03976, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(37.8277, 0, 0, 0, 1, 0, 0, 0, 2.08669, 0, 0, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_0p631")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_0psqp")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.490254, 0.376878, 2.07044, 2.72182)
+
+[node name="Servan" parent="." instance=ExtResource("1_33lru")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.81317, 0)

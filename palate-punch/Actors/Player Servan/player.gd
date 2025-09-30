@@ -2,7 +2,6 @@ class_name Player
 extends CharacterBody3D
 
 @export var inv : Inventory
-@export var statemachine : StateMachine
 
 @onready var GroundL = get_node('Raycasts/GroundL')
 @onready var GroundR = get_node('Raycasts/GroundR')
@@ -10,11 +9,13 @@ extends CharacterBody3D
 @onready var state_label = %StateLabel
 @onready var sprite = %Sprite
 @onready var graphics: Node3D = %Graphics
-@onready var sprite_pivot: Node3D = %SpritePivot
 @onready var framedata = %FrameData
 @onready var hurtbox = %HurtBox
-@onready var crouch_hurtbox = %CrouchHurtBox
-@onready var hitbox_man = %HitboxManager
+@onready var statemachine: Node = %StateMachine
+#@onready var hitbox_man = %HitboxManager
+
+@export var hitbox: PackedScene
+
 
 @export var speed = 14
 @export var fall_acceleration = 75
@@ -24,7 +25,8 @@ var target_velocity = Vector3.ZERO
 @export var id : int
 @export var character_type: String = "player"
 var current_direction: int = 1
-var self_state
+var selfState
+var offset_value = 5
 
 
 
@@ -88,9 +90,21 @@ func _ready() -> void:
 	
 	
 func _physics_process(delta):
-	self_state = state_label.text
+	selfState = state_label.text
 	%Frames.text = str(framedata.frame)
 	
+
+func create_hitbox(owner_type, radius, height, depth, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag=1):
+	var hitbox_instance = hitbox.instantiate()
+	self.add_child(hitbox_instance)
+	#Rotates The Points 
+	if current_direction == 1:
+		hitbox_instance.set_parameters(owner_type, radius, height, depth, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag)
+	else:
+		var flip_x_points = Vector3(-points.x, points.y, points.z)
+		hitbox_instance.set_parameters(owner_type, radius, height, depth, damage, -angle + 180, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
+	hitbox_instance.connect("hitbox_collided", Callable(statemachine, "_on_hitbox_collided"))
+	return hitbox_instance
 
 
 func turn(direction: bool) -> void:
@@ -103,35 +117,18 @@ func turn(direction: bool) -> void:
 		#LedgeGrabF.rotation_degrees.z = 90
 		#LedgeGrabB.rotation_degrees.z = -90
 	graphics.rotation.y = PI if current_direction == -1 else 0.0
-	if sprite_pivot.has_method("set_facing_dir"):
-		sprite_pivot.set_facing_dir(current_direction)
+	#adjust_sprite_offset()
 	#sprite.set_flip_h(direction)
-	hitbox_man.apply_dir_of_parent()
 		
-		
+func adjust_sprite_offset():
+	if current_direction == -1:
+		sprite.offset.x = -offset_value
+	elif current_direction == 1:
+		sprite.offset.x = 0
 
 func get_facing_dir() -> int:
 	return current_direction
 	
-func _set_hurtbox_active(shape: CollisionShape3D, active: bool) -> void:
-	if shape == null:
-		return
-	shape.set_deferred("disabled", not active)
-
-func use_stand_hurtbox() -> void:
-	call_deferred("_swap_hurtbox", hurtbox)
-	
-func use_crouch_hurtbox() -> void:
-	call_deferred("_swap_hurtbox", crouch_hurtbox)
-
-func _swap_hurtbox(target: CollisionShape3D) -> void:
-	_set_hurtbox_active(hurtbox, false)
-	_set_hurtbox_active(crouch_hurtbox, false)
-	_set_hurtbox_active(target, true)
-
-func switch_to_crouch_hurtbox(is_crouching: bool):
-	hurtbox.disabled = is_crouching
-	crouch_hurtbox.disabled = !is_crouching
 
 
 func reset_jumps() -> void:

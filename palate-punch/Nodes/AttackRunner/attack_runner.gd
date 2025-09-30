@@ -83,11 +83,9 @@ func step() -> bool:
 		var box = current_spec.hitboxes[i]
 		if box != null:
 			if f == box.active_start:
-				if hb_manager != null and hb_manager.has_method("hb_on"):
-					hb_manager.hb_on(box.name)
+				hb_manager.call_deferred("hb_on", box.name)
 			if f == box.active_end:
-				if hb_manager != null and hb_manager.has_method("hb_off"):
-					hb_manager.hb_off(box.name)
+				hb_manager.call_deferred("hb_off", box.name)
 		i += 1
 
 	# (Optional) armor/invuln hooks could go here if your MoveSpec has those fields
