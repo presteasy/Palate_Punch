@@ -18,11 +18,6 @@ extends CharacterBody3D
 
 @export var hitbox: PackedScene
 
-
-@export var speed = 14
-@export var fall_acceleration = 75
-var target_velocity = Vector3.ZERO
-
 #Global Variables
 @export var id : int
 @export var character_type: String = "player"

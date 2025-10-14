@@ -25,10 +25,10 @@ func update_frames(delta: float) -> void:
 	cooldown -= floor(delta * 60)
 	cooldown = clampi(cooldown, 0, cooldown)
 	
-	if not Input.is_action_pressed("block_%s" % parent.id):
-		shield_buffer = 0
-	elif Input.is_action_pressed("block_%s" % parent.id):
-		shield_buffer += floor(delta * 60)
+	#if not Input.is_action_pressed("block_%s" % parent.id):
+		#shield_buffer = 0
+	#elif Input.is_action_pressed("block_%s" % parent.id):
+		#shield_buffer += floor(delta * 60)
 		
 	if hitstop_frames > 0:
 		hitstop_frames -= floor(delta * 60)

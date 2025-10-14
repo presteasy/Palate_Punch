@@ -124,6 +124,9 @@ special_1={
 3d_physics/layer_2="Ground"
 3d_physics/layer_3="Door"
 3d_physics/layer_4="Enemies"
+3d_physics/layer_5="Wall"
+3d_physics/layer_6="Ceiling"
+3d_physics/layer_7="Blast Zone"
 
 [physics]
 

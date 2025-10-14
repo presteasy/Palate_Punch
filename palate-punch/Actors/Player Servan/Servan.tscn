@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://oeqbt6w1xcag"]
+[gd_scene load_steps=65 format=3 uid="uid://oeqbt6w1xcag"]
 
 [ext_resource type="Script" uid="uid://1kopyvtybxil" path="res://Actors/Player Servan/player.gd" id="1_8221m"]
 [ext_resource type="Resource" uid="uid://cxf35m3jj3nr7" path="res://Resources/Items/Player Inventory/playerinventory.tres" id="2_s8vdf"]
@@ -133,6 +133,22 @@ animations = [{
 }],
 "loop": true,
 "name": &"JUMP",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_sb4tc")
+}],
+"loop": true,
+"name": &"JUMPSQUAT",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_sb4tc")
+}],
+"loop": true,
+"name": &"LANDING",
 "speed": 5.0
 }, {
 "frames": [{
@@ -769,6 +785,64 @@ tracks/1/keys = {
 "values": [0]
 }
 
+[sub_resource type="Animation" id="Animation_mwuhw"]
+resource_name = "LANDING"
+length = 0.166669
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"LANDING"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_2h8r0"]
+resource_name = "JUMPSQUAT"
+length = 0.166669
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"JUMPSQUAT"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qojnd"]
 _data = {
 &"AIR": SubResource("Animation_14rbp"),
@@ -780,6 +854,8 @@ _data = {
 &"D_SMASH": SubResource("Animation_c8a24"),
 &"FAIR": SubResource("Animation_w7wk6"),
 &"F_SMASH": SubResource("Animation_wk4yc"),
+&"JUMPSQUAT": SubResource("Animation_2h8r0"),
+&"LANDING": SubResource("Animation_mwuhw"),
 &"NAIR": SubResource("Animation_sb4tc"),
 &"PUNCH_01": SubResource("Animation_55sbp"),
 &"RESET": SubResource("Animation_n3v62"),
@@ -800,11 +876,10 @@ radius = 0.3
 height = 0.7
 
 [node name="Servan" type="CharacterBody3D" groups=["player"]]
-collision_mask = 14
+collision_mask = 126
 script = ExtResource("1_8221m")
 inv = ExtResource("2_s8vdf")
 hitbox = ExtResource("36_wy3gy")
-fall_acceleration = 65
 id = 1
 weight = 90
 run_speed = 8

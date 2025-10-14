@@ -984,7 +984,7 @@ func enter_state(new_state, old_state):
 			pass
 #====== AIREAL MOVEMENT ======
 		states.JUMP_SQUAT:
-			parent.play_animation("CROUCH")
+			parent.play_animation("JUMPSQUAT")
 			parent.state_label.text = str("JUMP_SQUAT")
 		states.SHORT_HOP:
 			pass
@@ -994,6 +994,7 @@ func enter_state(new_state, old_state):
 			parent.play_animation("AIR")
 			parent.state_label.text = str("AIR")
 		states.LANDING:
+			parent.play_animation("LANDING")
 			parent.state_label.text = str("LANDING")
 		states.FREE_FALL:
 			parent.play_animation("ROLL")
