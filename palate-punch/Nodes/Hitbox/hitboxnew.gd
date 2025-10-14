@@ -99,38 +99,48 @@ func set_parameters(ot,r,h,de,d,a,b_kb,kb_s,dur,t,p,af,hit,parent=get_parent()):
 func Hitbox_Collide(body):
 	print("Collided with: ", body, "Class: ", body.get_class())
 	#body = body.get_parent()
-	if body.character_type == owner_type:
-		if !(body.get_parent() in player_list):
-		#if body.name == "Parrybox":
-			#set_collision_mask_value(1,false)
-			#parry = true
-			#if get_parent().is_on_floor() == false:
-				#var selfstate = get_parent().get_node("StateMachine")
-				#selfstate.state = selfstate.states.STUNNED
-		#else:
-			#body = body.get_parent()
-			player_list.append(body)
-			if body.has_node("Health"):
-				var health_node = body.get_node("Health")
-				health_node.take_damage(damage)
-			var charstate
-			charstate = body.get_node("StateMachine")
-			weight = body.weight
-			body.percentage += damage
-			knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
-			s_angle(body)
-			charstate.state = charstate.states.HITFREEZE
-			charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
-			
-			body.knockback = knockbackVal
-			body.hitstun = getHitstun(knockbackVal/0.3)
-			get_parent().connected = true
-			body._frame()
-			
-			#Globals.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
-			get_parent().hit_pause_dur = duration - framez
-			get_parent().temp_pos = get_parent().position
-			get_parent().temp_vel = get_parent().velocity
+	var prop_list = body.get_property_list()
+	var found: bool = false
+	for prop in prop_list:
+		if prop.name == "character_type":
+			found = true
+			break
+	if found:
+		if body.character_type != owner_type:
+			if !(body.get_parent() in player_list):
+			#if body.name == "Parrybox":
+				#set_collision_mask_value(1,false)
+				#parry = true
+				#if get_parent().is_on_floor() == false:
+					#var selfstate = get_parent().get_node("StateMachine")
+					#selfstate.state = selfstate.states.STUNNED
+			#else:
+				#body = body.get_parent()
+				player_list.append(body)
+				if body.has_node("Health"):
+					var health_node = body.get_node("Health")
+					health_node.take_damage(damage)
+				var charstate
+				charstate = body.get_node("StateMachine")
+				weight = body.weight
+				body.percentage += damage
+				knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
+				s_angle(body)
+				charstate.state = charstate.states.HITSTOP
+				charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
+				
+				body.knockback = knockbackVal
+				body.hitstun = getHitstun(knockbackVal/0.3)
+				get_parent().connected = true
+				var bodyframe
+				bodyframe = body.get_node("FrameData")
+				bodyframe._frame()
+				
+				#Globals.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
+				get_parent().hit_pause_dur = duration - framez
+				get_parent().temp_pos = get_parent().position
+				get_parent().temp_vel = get_parent().velocity
+				SignalManager.emit_signal("hit_landed")
 
 
 func update_dimensions(radius: float, height: float):
@@ -242,10 +252,10 @@ func get_azimuth_angle(v: Vector3) -> float:
 
 func angle_flipperv2(body_vel: Vector3, body_position: Vector3, hdecay = 0, vdecay = 0):
 	var xangle
-	if get_parent().direction() == -1:
-		xangle = (-(((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180) / PI) + 180
-	else:
-		xangle = (((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180) / PI + 180
+	#if get_parent().direction() == -1:
+		#xangle = (-(((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180) / PI) + 180
+	#else:
+	xangle = (((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180) / PI + 180
 
 	match angle_flipper:
 		0: # Same Knockback

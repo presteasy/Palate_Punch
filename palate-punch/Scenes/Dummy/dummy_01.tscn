@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://dsyony1kyvsin"]
+
+[ext_resource type="Script" uid="uid://gopicv7dkw3c" path="res://Scenes/Dummy/dummy_01.gd" id="1_2e4ns"]
+[ext_resource type="Script" uid="uid://g2d75qshsofn" path="res://Scenes/Dummy/SM_dummy_01.gd" id="2_ejwvl"]
+[ext_resource type="Script" uid="uid://n4wl06hgeu8e" path="res://Nodes/Frames/frame_data.gd" id="3_kpffn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7gji8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2e4ns"]
+albedo_color = Color(0.884314, 3.0563e-06, 1.82897e-06, 1)
+metallic_specular = 0.71
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c02bp"]
+material = SubResource("StandardMaterial3D_2e4ns")
+
+[node name="Dummy" type="CharacterBody3D"]
+collision_layer = 8
+script = ExtResource("1_2e4ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_7gji8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_c02bp")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("2_ejwvl")
+
+[node name="FrameData" type="Node" parent="."]
+script = ExtResource("3_kpffn")
+metadata/_custom_type_script = "uid://n4wl06hgeu8e"
+
+[node name="Raycasts" type="Node" parent="."]
+
+[node name="GroundL" type="RayCast3D" parent="Raycasts"]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.332864, -0.567225, 0)
+debug_shape_custom_color = Color(0.894118, 0, 0, 1)
+
+[node name="GroundR" type="RayCast3D" parent="Raycasts"]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.324255, -0.567225, 0)
+debug_shape_custom_color = Color(0.894118, 0, 0, 1)

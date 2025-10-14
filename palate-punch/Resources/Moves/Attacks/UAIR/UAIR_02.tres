@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Attacks" load_steps=2 format=3 uid="uid://cq4mm15t8lm24"]
+
+[ext_resource type="Script" uid="uid://bk4hnjp0ffakm" path="res://Resources/Moves/Attacks/attacks.gd" id="1_eo07m"]
+
+[resource]
+script = ExtResource("1_eo07m")
+name = &"UAIR_02"
+owner_type = "player"
+radius = 0.2
+height = 1.3
+depth = 0.0
+damage = 8
+angle = 45
+base_kb = 3
+kb_scaling = 5
+duration = 3
+type = ""
+points = Vector3(0.056, 0.817, 0)
+angle_flipper = 0
+hitlag = 1
+frame_start = 17
+frame_end = 30
+metadata/_custom_type_script = "uid://bk4hnjp0ffakm"

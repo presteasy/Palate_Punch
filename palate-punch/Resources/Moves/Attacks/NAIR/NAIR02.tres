@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Attacks" load_steps=2 format=3 uid="uid://d1hrets7q0r3v"]
+
+[ext_resource type="Script" uid="uid://bk4hnjp0ffakm" path="res://Resources/Moves/Attacks/attacks.gd" id="1_6e4t3"]
+
+[resource]
+script = ExtResource("1_6e4t3")
+name = &"NAIR"
+owner_type = "player"
+radius = 0.3
+height = 0.7
+depth = 0.0
+damage = 8
+angle = 45
+base_kb = 3
+kb_scaling = 5
+duration = 3
+type = ""
+points = Vector3(0.713, 0.215, 0)
+angle_flipper = 0
+hitlag = 1
+frame_start = 18
+frame_end = 45
+metadata/_custom_type_script = "uid://bk4hnjp0ffakm"

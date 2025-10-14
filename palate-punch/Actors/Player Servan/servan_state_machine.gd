@@ -10,7 +10,7 @@ class_name StateMachineServan
 func _ready() -> void:
 	add_state('STAND')
 	add_state('CROUCH')
-	add_state('HITFREEZE') #Todo
+	add_state('HITSTOP') #Todo
 	add_state('HITSTUN') #Todo
 	#GROUNDED MOVEMENT
 	add_state('DASH')
@@ -79,7 +79,36 @@ func get_transition(delta):
 	
 		if Falling() == true:
 			return states.AIR
-			
+		
+#-----AIREAL ATTACKS-----
+		if Input.is_action_just_pressed("attack_%s" % id) && AIREAL() == true:
+			parent.connected = false
+			if Input.is_action_pressed("up_%s" % id):
+				framedata._frame()
+				return states.UAIR
+			if Input.is_action_pressed("down_%s" % id):
+				framedata._frame()
+				return states.DAIR
+			match parent.direction():
+				1:
+					if Input.is_action_pressed("left_%s" % id):
+						framedata._frame()
+						return states.BAIR
+					if Input.is_action_pressed("right_%s" % id):
+						framedata._frame()
+						return states.FAIR
+				-1:
+					if Input.is_action_pressed("right_%s" % id):
+						framedata._frame()
+						return states.BAIR
+					if Input.is_action_pressed("left_%s" % id):
+						framedata._frame()
+						return states.FAIR
+			framedata._frame()
+			return states.NAIR
+
+#-------STATE LOGIC------
+
 		match state:
 			states.STAND:
 				parent.can_run = true
@@ -133,9 +162,10 @@ func get_transition(delta):
 				
 						
 			states.CROUCH:
-				#if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
-					#framedata._frame()
-					#return states.CRAWL
+				parent.can_run = false
+				if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
+					framedata._frame()
+					return states.CRAWL
 
 				if not Input.is_action_pressed("down_%s" % id):
 					framedata._frame()
@@ -147,7 +177,7 @@ func get_transition(delta):
 					#parent.can_run = false
 					#return states.CROUCH_BLOCK
 			
-			states.HITFREEZE:
+			states.HITSTOP:
 				#print("Lily is Hitfreeze!")
 				#if parent.freezeframes == 0:
 					#framedata._frame()
@@ -194,16 +224,15 @@ func get_transition(delta):
 				
 	#====== DEFENSIVE OPTIONS ======
 			states.BLOCK:
-				return
 				#emit_signal("entered_invulnerable_state")
 				#parent.switch_to_crouch_collision(false)
-				#parent.can_run = false
-				#
-				#if not Input.is_action_pressed("block_%s" % id):
-					#emit_signal("exited_invulnerable_state")
-					#framedata._frame()
-					#parent.can_run = true
-					#return states.STAND
+				parent.can_run = false
+				
+				if not Input.is_action_pressed("block_%s" % id):
+					emit_signal("exited_invulnerable_state")
+					framedata._frame()
+					parent.can_run = true
+					return states.STAND
 					#
 				#if Input.is_action_pressed("down_%s" % id):
 					#framedata._frame()
@@ -506,9 +535,11 @@ func get_transition(delta):
 				if Input.is_action_just_pressed("attack_%s" % id):
 					framedata._frame()
 					return states.NAIR
+					
+				
 				
 			states.LANDING: 
-				if framedata.frame <= framedata.landing_frames + framedata.lag_frames:
+				if framedata.frame <= framedata.landing_lag_frames + framedata.lag_frames:
 					if parent.velocity.x > 0:
 						parent.velocity.x =  parent.velocity.x - parent.traction/2
 						parent.velocity.x = clampf(parent.velocity.x, 0 , parent.velocity.x)
@@ -609,7 +640,7 @@ func get_transition(delta):
 				
 					
 				#Facing Right
-				if parent.LedgeGrabF.get_target_position().x > 0:
+				if parent.Ledge_Grab_F.rotation_degrees.z > 0:
 					if Input.is_action_just_pressed("left_%s" % id):
 						parent.velocity.x = (parent.air_accel / 2)
 						parent.regrab = 30
@@ -629,7 +660,7 @@ func get_transition(delta):
 					return states.LEDGE_JUMP
 					
 				#Facing Left
-				if parent.LedgeGrabF.get_target_position().x > 0:
+				if parent.Ledge_Grab_F.rotation_degrees.z > 0:
 					if Input.is_action_just_pressed("right_%s" % id):
 						parent.velocity.x = (parent.air_accel / 2)
 						parent.regrab = 30
@@ -825,19 +856,84 @@ func get_transition(delta):
 					#return states.LANDING
 
 			states.NAIR:
-				return
+				AIRMOVEMENT()
+				
+				if framedata.frame == 0:
+					hb_atk_runner.NAIR()
+					pass
+				if hb_atk_runner.NAIR() == true:
+					if framedata.frame >= 20:
+						framedata._frame()
+						return states.AIR
+						
+				if parent.is_on_floor():
+					parent.reset_jumps()
+					parent.velocity.y = 0
+					return states.LANDING
 
 			states.FAIR:
-				return
+				AIRMOVEMENT()
+				
+				if framedata.frame == 0:
+					hb_atk_runner.FAIR()
+					pass
+				if hb_atk_runner.FAIR() == true:
+					if framedata.frame >= 30:
+						framedata._frame()
+						return states.AIR
+				
+				if parent.is_on_floor():
+					parent.reset_jumps()
+					parent.velocity.y = 0
+					return states.LANDING
 				
 			states.BAIR:
-				return
+				AIRMOVEMENT()
+				
+				if framedata.frame == 0:
+					hb_atk_runner.BAIR()
+					pass
+				if hb_atk_runner.BAIR() == true:
+					if framedata.frame >= 20:
+						framedata._frame()
+						return states.AIR
+						
+				if parent.is_on_floor():
+					parent.reset_jumps()
+					parent.velocity.y = 0
+					return states.LANDING
 
 			states.UAIR:
-				return
+				AIRMOVEMENT()
+				
+				if framedata.frame == 0:
+					hb_atk_runner.UAIR()
+					pass
+				if hb_atk_runner.UAIR() == true:
+					if framedata.frame >= 30:
+						framedata._frame()
+						return states.AIR
+				
+				if parent.is_on_floor():
+					parent.reset_jumps()
+					parent.velocity.y = 0
+					return states.LANDING
 				
 			states.DAIR:
-				return
+				AIRMOVEMENT()
+
+				if framedata.frame == 0:
+					hb_atk_runner.DAIR()
+					pass
+				if hb_atk_runner.DAIR() == true:
+					if framedata.frame >= 40:
+						framedata._frame()
+						return states.AIR
+
+				if parent.is_on_floor():
+					parent.reset_jumps()
+					parent.velocity.y = 0
+					return states.LANDING
 				
 
 				
@@ -888,7 +984,8 @@ func enter_state(new_state, old_state):
 			pass
 #====== AIREAL MOVEMENT ======
 		states.JUMP_SQUAT:
-			pass
+			parent.play_animation("CROUCH")
+			parent.state_label.text = str("JUMP_SQUAT")
 		states.SHORT_HOP:
 			pass
 		states.FULL_HOP:
@@ -897,7 +994,7 @@ func enter_state(new_state, old_state):
 			parent.play_animation("AIR")
 			parent.state_label.text = str("AIR")
 		states.LANDING:
-			pass
+			parent.state_label.text = str("LANDING")
 		states.FREE_FALL:
 			parent.play_animation("ROLL")
 			parent.state_label.text = str("FREE_FALL")
@@ -1082,13 +1179,25 @@ func state_includes(state_array):
 			return true
 	return false
 	
+func TILT():
+	if state_includes([states.STAND,states.DASH,states.RUN,states.WALK,states.CROUCH,states.JUMP_SQUAT]):
+		return true
+
+func AIREAL():
+	if state_includes([states.U_SPECIAL, states.D_SPECIAL, states.N_SPECIAL, states.F_SPECIAL, states.JUMP_SQUAT, states.AIR, states.D_SMASH, states.F_SMASH, states.U_SMASH]):
+		if !(parent.GroundL.is_colliding() or parent.GroundR.is_colliding()):
+			return true
+		else:
+			return false
+
 func AIRMOVEMENT():
 	if parent.velocity.y < parent.falling_speed:
 		parent.velocity.y -= parent.fall_speed
-	if Input.is_action_just_pressed("down_%s" % id) and parent.velocity.y > -1 and parent.fastfall == false:
-		parent.velocity.y = -parent.max_fall_speed
-		parent.fastfall = true
-		print(parent.fastfall)
+	if Input.is_action_just_pressed("down_%s" % id) and parent.fastfall == false:
+		if parent.velocity.y < 0 and parent.velocity.y > -2:
+			parent.velocity.y = -parent.max_fall_speed
+			parent.fastfall = true
+			print("Fastfall is ", parent.fastfall)
 	if parent.fastfall == true:
 		parent.set_collision_mask_value(7,false)
 		parent.velocity.y = -parent.max_fall_speed
@@ -1124,10 +1233,28 @@ func Falling():
 			return true
 
 func Landing():
-	if state_includes([states.AIR,states.NAIR,states.FREE_FALL]):
+	if state_includes([states.AIR, states.NAIR, states.BAIR, states.FAIR, states.UAIR, states.DAIR, states.FREE_FALL]):
 		if (parent.GroundL.is_colliding() or parent.GroundR.is_colliding()) and parent.velocity.y <= 0:
 			framedata.frame = 0
 			if parent.velocity.y < 0:
 				parent.velocity.y = 0
 			parent.fastfall = false
 			return true
+			
+func SPECIAL():
+	if state_includes([states.LANDING, states.STAND, states.WALK, states.DASH, states.RUN, states.TURN, states.CROUCH]):
+		return true
+
+var kbx
+var kby
+var hd
+var vd
+var pos
+
+func hitfreeze(duration, knocback):
+	pos = parent.get_position()
+	framedata.hitstop_frames = duration
+	kbx = knocback[0]
+	kby = knocback[1]
+	hd = knocback[2]
+	vd = knocback[3]

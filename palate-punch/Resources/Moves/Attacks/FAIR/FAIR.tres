@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Attacks" load_steps=2 format=3 uid="uid://dxvpcu3jds8cx"]
+
+[ext_resource type="Script" uid="uid://bk4hnjp0ffakm" path="res://Resources/Moves/Attacks/attacks.gd" id="1_0x41t"]
+
+[resource]
+script = ExtResource("1_0x41t")
+name = &"FAIR"
+owner_type = "player"
+radius = 0.3
+height = 1.555
+depth = 0.0
+damage = 8
+angle = 45
+base_kb = 3
+kb_scaling = 5
+duration = 3
+type = "normal"
+points = Vector3(0.893, -0.232, 0)
+angle_flipper = 0
+hitlag = 1
+frame_start = 12
+frame_end = 30
+metadata/_custom_type_script = "uid://bk4hnjp0ffakm"

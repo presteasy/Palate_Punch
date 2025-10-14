@@ -3,8 +3,10 @@ extends CharacterBody3D
 
 @export var inv : Inventory
 
-@onready var GroundL = get_node('Raycasts/GroundL')
-@onready var GroundR = get_node('Raycasts/GroundR')
+@onready var GroundL = %GroundL
+@onready var GroundR = %GroundR
+@onready var Ledge_Grab_F = %Ledge_Grab_F
+@onready var Ledge_Grab_B = %Ledge_Grab_B
 @onready var anim = %AnimationPlayer
 @onready var state_label = %StateLabel
 @onready var sprite = %Sprite
@@ -24,6 +26,8 @@ var target_velocity = Vector3.ZERO
 #Global Variables
 @export var id : int
 @export var character_type: String = "player"
+@export var weight: int
+@export var percentage: float
 var current_direction: int = 1
 var selfState
 var offset_value = 5
@@ -72,7 +76,6 @@ var air_jump = 0
 var fastfall = false
 var dash_jump_limit = 10
 
-#Hitbox
 
 #Temporary Variables
 var hit_pause = 0
@@ -86,7 +89,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	Global.player = self
-
 	
 	
 func _physics_process(delta):
@@ -110,16 +112,21 @@ func create_hitbox(owner_type, radius, height, depth, damage, angle, base_kb, kb
 func turn(direction: bool) -> void:
 	if direction:
 		current_direction = -1
-		#LedgeGrabF.rotation_degrees.z = -90
-		#LedgeGrabB.rotation_degrees.z = 90
+		Ledge_Grab_F.rotation_degrees.z = -90
+		Ledge_Grab_B.rotation_degrees.z = 90
 	else:
 		current_direction = 1
-		#LedgeGrabF.rotation_degrees.z = 90
-		#LedgeGrabB.rotation_degrees.z = -90
+		Ledge_Grab_F.rotation_degrees.z = 90
+		Ledge_Grab_B.rotation_degrees.z = -90
 	graphics.rotation.y = PI if current_direction == -1 else 0.0
-	#adjust_sprite_offset()
-	#sprite.set_flip_h(direction)
-		
+
+func direction():
+	if Ledge_Grab_F.rotation_degrees.z == 90:
+		return 1
+	else:
+		return -1
+	
+
 func adjust_sprite_offset():
 	if current_direction == -1:
 		sprite.offset.x = -offset_value
@@ -139,3 +146,15 @@ func play_animation(animation_name):
 
 func collect(item):
 	inv.insert(item)
+
+func _hit_pause(delta):
+	if hit_pause < hit_pause_dur:
+		self.position = temp_pos
+		hit_pause += floor((1 * delta) * 60)
+	else:
+		if temp_vel != Vector3.ZERO:
+			self.velocity.x = temp_vel.x
+			self.velocity.y = temp_vel.y
+			temp_vel = Vector3.ZERO
+		hit_pause_dur = 0
+		hit_pause = 0

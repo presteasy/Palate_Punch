@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyou5vip3ej25"]
+
+[ext_resource type="Script" uid="uid://o3vgfl1sakhv" path="res://Scenes/Blast Zones/blast_zones.gd" id="1_heqiy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c02bp"]
+size = Vector3(1, 30, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k7goh"]
+size = Vector3(50, 1, 5)
+
+[node name="Blast Zones" type="Area3D"]
+script = ExtResource("1_heqiy")
+
+[node name="BZ_Right" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.0058, 0, 0)
+shape = SubResource("BoxShape3D_c02bp")
+debug_color = Color(0.99, 0, 0.33, 1)
+
+[node name="BZ_Left" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9934, 0, 0)
+shape = SubResource("BoxShape3D_c02bp")
+debug_color = Color(0.99, 0, 0.33, 1)
+
+[node name="BZ_Top" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.9973, 0)
+shape = SubResource("BoxShape3D_k7goh")
+debug_color = Color(0.99, 0, 0.33, 1)
+
+[node name="BZ_Bot" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -14.5199, 0)
+shape = SubResource("BoxShape3D_k7goh")
+debug_color = Color(0.99, 0, 0.33, 1)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -5,6 +5,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_bs4bx"]
 
 [node name="Hitbox" type="Area3D"]
+collision_mask = 9
 script = ExtResource("1_6cam7")
 
 [node name="Hitbox_Shape" type="CollisionShape3D" parent="."]

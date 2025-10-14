@@ -10,13 +10,15 @@ extends Node
 var current_3d_scene : Node
 var current_gui_scene
 
+var hit: bool = false
+
 
 func _ready() -> void:
 	Global.game_controller = self
 	Global.world3d = get_node("%World3D")
 	current_gui_scene = %StartMenu
 
-
+#-----SCENE CHANGE------
 func change_gui_scene(new_scene: String, delete: bool = true, keep_running: bool = false) -> void:
 	if current_gui_scene != null:
 		if delete:
@@ -28,7 +30,6 @@ func change_gui_scene(new_scene: String, delete: bool = true, keep_running: bool
 	var new = load(new_scene).instantiate()
 	gui.add_child(new)
 	current_gui_scene = new
-
 
 func change_3d_scene(new_scene: String, delete: bool = true, keep_running: bool = false) -> void:
 	if current_3d_scene != null:
@@ -69,6 +70,8 @@ func change_3d_to_gui(new_scene: String, delete: bool = true, keep_running: bool
 	current_gui_scene = new
 	InputHandler.set_input_mode(InputHandler.InputMode.UI)
 
+
+#-----RESTART WORLD-----
 func restart_active_world() -> void:
 	if current_3d_scene == null:
 		return
@@ -84,6 +87,7 @@ func restart_active_world() -> void:
 	current_3d_scene = fresh
 	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
 	
+#-----PLAYER STUFF-----	
 func reset_player() -> void:
 	Global.player.queue_free()
 	spawn_player()
@@ -112,14 +116,10 @@ func spawn_player() -> void:
 	new_player.add_to_group("player")
 	SignalManager.emit_signal("player_spawned", new_player)
 
-func debug_dump_all_shapes(tag := "") -> void:
-	var shapes = get_tree().get_nodes_in_group("")
-	print("\n=== SHAPE DUMP", tag, " ===")
-	for n in shapes:
-		if n is CollisionShape3D:
-			var cs := n as CollisionShape3D
-			prints(
-				cs.get_path(),
-				"disabled=", cs.disabled,
-				"global=", cs.global_transform.origin
-			)
+
+#-----HITSTUN-----
+func hitstun(mod, duration):
+	Engine.time_scale = mod / 100
+	print(str(mod))
+	await get_tree().create_timer(duration * Engine.time_scale)
+	Engine.time_scale = 1

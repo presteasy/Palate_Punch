@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Attacks" load_steps=2 format=3 uid="uid://cey6lrvky6yaw"]
+
+[ext_resource type="Script" uid="uid://bk4hnjp0ffakm" path="res://Resources/Moves/Attacks/attacks.gd" id="1_men88"]
+
+[resource]
+script = ExtResource("1_men88")
+name = &"DAIR"
+owner_type = "player"
+radius = 0.3
+height = 0.7
+depth = 0.0
+damage = 15
+angle = 45
+base_kb = 3
+kb_scaling = 5
+duration = 3
+type = ""
+points = Vector3(0.022, -0.925, 0)
+angle_flipper = 0
+hitlag = 0
+frame_start = 12
+frame_end = 40
+metadata/_custom_type_script = "uid://bk4hnjp0ffakm"
