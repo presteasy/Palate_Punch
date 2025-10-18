@@ -1,6 +1,6 @@
 @tool
 extends Area3D
-class_name Hitbox
+class_name Hitbox_old
 
 signal hitbox_collided(hitbox: Hitbox, body: Node, knockback_val: float)
 

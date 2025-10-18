@@ -171,6 +171,7 @@ func get_transition(delta):
 					framedata._frame()
 					parent.can_run = true
 					return states.STAND
+				
 
 				#if Input.is_action_pressed("block_%s" % id):
 					#framedata._frame()
@@ -397,7 +398,7 @@ func get_transition(delta):
 						return states.TURN
 				else:
 					framedata._frame()
-					return states.AIR
+					return states.STAND
 						
 				var run_vec = Vector3(run_x, 0, 0).normalized()
 				var input_strength = run_vec.length()
@@ -538,7 +539,7 @@ func get_transition(delta):
 					
 				
 				
-			states.LANDING: 
+			states.LANDING:
 				if framedata.frame <= framedata.landing_lag_frames + framedata.lag_frames:
 					if parent.velocity.x > 0:
 						parent.velocity.x =  parent.velocity.x - parent.traction/2
@@ -933,6 +934,7 @@ func get_transition(delta):
 				if parent.is_on_floor():
 					parent.reset_jumps()
 					parent.velocity.y = 0
+					framedata.lag_frames = 20
 					return states.LANDING
 				
 
@@ -1200,8 +1202,11 @@ func AIRMOVEMENT():
 			parent.fastfall = true
 			print("Fastfall is ", parent.fastfall)
 	if parent.fastfall == true:
-		parent.set_collision_mask_value(7,false)
+		parent.set_collision_mask_value(7,false) #this is for platforms
 		parent.velocity.y = -parent.max_fall_speed
+		framedata.landing_lag_frames = 0
+	if parent.fastfall == false:
+		framedata.landing_lag_frames = 10
 		
 	if  abs(parent.velocity.x) >=  abs(parent.max_air_speed):
 		if parent.velocity.x > 0:

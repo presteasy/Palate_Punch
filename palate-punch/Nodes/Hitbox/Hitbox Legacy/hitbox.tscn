@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b8dubvntuc0hg"]
 
-[ext_resource type="Script" uid="uid://333wojd6idtb" path="res://Nodes/Hitbox/Hitbox Legacy/hitbox.gd" id="1_6cam7"]
+[ext_resource type="Script" uid="uid://333wojd6idtb" path="res://Nodes/Hitbox/Hitbox Legacy/hitbox_old.gd" id="1_6cam7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6cam7"]
 

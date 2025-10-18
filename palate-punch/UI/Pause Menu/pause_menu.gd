@@ -27,8 +27,16 @@ func _on_toggle_game_paused(is_paused : bool):
 #
 func _input(event : InputEvent):
 	if InputHandler.is_ui_mode() && InputHandler.pause_open == true:
-		if event.is_action_pressed("escape_%s" % Global.player.id):
+		if event.is_action_pressed("escape_%s" % Global.player.id) or event.is_action_pressed("special_%s" % Global.player.id):
 			InputHandler.game_paused = !InputHandler.game_paused
+		if event.is_action_pressed("jump_1"):
+			if resume_button.has_focus():
+				_on_resume_button_pressed()
+			if restart_button.has_focus():
+				_on_restart_button_pressed()
+			if quit_button.has_focus():
+				_on_quit_button_pressed()
+			
 	if InputHandler.is_gameplay_mode():
 		if event.is_action_pressed("escape_%s" % Global.player.id):
 			toggle_pause_menu()
@@ -39,9 +47,12 @@ func toggle_pause_menu():
 
 	
 func _on_resume_button_pressed() -> void:
-	InputHandler.game_paused = false
-	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
 	hide()
+	InputHandler.game_paused = false
+	await get_tree().create_timer(0.5).timeout
+	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
+	
+	
 
 
 func _on_restart_button_pressed() -> void:

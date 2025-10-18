@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://boqy5k0sgm4f0"]
 
-[ext_resource type="Script" uid="uid://bhv8mva3fwvtm" path="res://UI/Start Menu/start_button.gd" id="1_dl586"]
+[ext_resource type="Script" uid="uid://d27anp7erv5hg" path="res://UI/Start Menu/start_menu.gd" id="1_5ggrq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q5qyg"]
 bg_color = Color(0.642197, 0.563074, 0.713144, 1)
@@ -31,6 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_5ggrq")
 metadata/_edit_lock_ = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -41,7 +42,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.133522, 0.1432, 0.253108, 1)
-metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -74,10 +74,19 @@ offset_bottom = 83.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+[node name="StartButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_bottom = NodePath("../QuitButton")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f14c5")
+action_mode = 0
 text = "Start"
-script = ExtResource("1_dl586")
 
-[connection signal="pressed" from="Panel/VBoxContainer/Button" to="Panel/VBoxContainer/Button" method="_on_pressed"]
+[node name="QuitButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../StartButton")
+text = "Quit"
+
+[connection signal="pressed" from="Panel/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

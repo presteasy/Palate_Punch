@@ -14,7 +14,6 @@ extends CharacterBody3D
 @onready var framedata = %FrameData
 @onready var hurtbox = %HurtBox
 @onready var statemachine: Node = %StateMachine
-#@onready var hitbox_man = %HitboxManager
 
 @export var hitbox: PackedScene
 
