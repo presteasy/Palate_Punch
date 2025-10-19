@@ -104,47 +104,44 @@ func Hitbox_Collide(body):
 		if prop.name == "character_type":
 			found = true
 			break
-	if body == parent:
-		return
+	if found:
+		if body.character_type != owner_type:
+			if !(body.get_parent() in player_list):
+			#if body.name == "Parrybox":
+				#set_collision_mask_value(1,false)
+				#parry = true
+				#if get_parent().is_on_floor() == false:
+					#var selfstate = get_parent().get_node("StateMachine")
+					#selfstate.state = selfstate.states.STUNNED
+			#else:
+				#body = body.get_parent()
+				player_list.append(body)
+				if body.has_node("Health"):
+					var health_node = body.get_node("Health")
+					health_node.take_damage(damage)
+				var charstate
+				charstate = body.get_node("StateMachine")
+				weight = body.weight
+				body.percentage += damage
+				knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
+				s_angle(body)
+				charstate.state = charstate.states.HITSTOP
+				charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
+				
+				body.knockback = knockbackVal
+				body.hitstun = getHitstun(knockbackVal/0.3)
+				get_parent().connected = true
+				var bodyframe
+				bodyframe = body.get_node("FrameData")
+				bodyframe._frame()
+				
+				Global.game_controller.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
+				get_parent().hit_pause_dur = duration - framez
+				get_parent().temp_pos = get_parent().position
+				get_parent().temp_vel = get_parent().velocity
+				SignalManager.emit_signal("hit_landed")
 	else:
-		if found:
-			if body.character_type != owner_type:
-				if !(body.get_parent() in player_list):
-				#if body.name == "Parrybox":
-					#set_collision_mask_value(1,false)
-					#parry = true
-					#if get_parent().is_on_floor() == false:
-						#var selfstate = get_parent().get_node("StateMachine")
-						#selfstate.state = selfstate.states.STUNNED
-				#else:
-					#body = body.get_parent()
-					player_list.append(body)
-					if body.has_node("Health"):
-						var health_node = body.get_node("Health")
-						health_node.take_damage(damage)
-					var charstate
-					charstate = body.get_node("StateMachine")
-					weight = body.weight
-					body.percentage += damage
-					knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
-					s_angle(body)
-					charstate.state = charstate.states.HITSTOP
-					charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
-					
-					body.knockback = knockbackVal
-					body.hitstun = getHitstun(knockbackVal/0.3)
-					get_parent().connected = true
-					var bodyframe
-					bodyframe = body.get_node("FrameData")
-					bodyframe._frame()
-					
-					Global.game_controller.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
-					get_parent().hit_pause_dur = duration - framez
-					get_parent().temp_pos = get_parent().position
-					get_parent().temp_vel = get_parent().velocity
-					SignalManager.emit_signal("hit_landed")
-		else:
-			return
+		return
 	print("Collided with: ", body, " Class: ", body.get_class())
 
 func update_dimensions(radius: float, height: float):

@@ -26,3 +26,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.490254, 0.376878, 2.07044, 2.7
 
 [node name="Servan" parent="." instance=ExtResource("1_33lru")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.81317, 0)
+hitbox = null
