@@ -13,7 +13,7 @@ albedo_color = Color(0.77, 0.1463, 0.1463, 1)
 material = SubResource("StandardMaterial3D_v64j4")
 size = Vector3(30, 1, 5)
 
-[node name="TestLevel02" type="Node3D"]
+[node name="TestLevel02" type="Node3D" groups=["level"]]
 script = ExtResource("1_1nopq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]

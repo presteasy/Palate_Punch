@@ -6,7 +6,6 @@ extends Node
 @export var gui : CanvasLayer
 @export var player_parent : Node3D
 
-@onready var player : Player
 var current_3d_scene : Node
 var current_gui_scene
 
@@ -34,7 +33,8 @@ func change_gui_scene(new_scene: String, delete: bool = true, keep_running: bool
 func change_3d_scene(new_scene: String, delete: bool = true, keep_running: bool = false) -> void:
 	if current_3d_scene != null:
 		if delete:
-			current_3d_scene.queue_free()
+			for s in get_tree().get_nodes_in_group("level"):
+				s.queue_free()
 		elif keep_running:
 			current_3d_scene.visible = false
 		else:
@@ -72,25 +72,38 @@ func change_3d_to_gui(new_scene: String, delete: bool = true, keep_running: bool
 
 
 #-----RESTART WORLD-----
-func restart_active_world() -> void:
+func restart_active_world():
 	if current_3d_scene == null:
 		return
 	var path := current_3d_scene.scene_file_path
 	if path == "":
 		push_error("Active Scene has no scene_file_path; cannot restart.")
 		return
+	
+	var old := current_3d_scene
 	var fresh: Node = load(path).instantiate()
+	
 	if current_3d_scene is Node3D and fresh is Node3D:
 		fresh.transform = (current_3d_scene as Node3D).transform
+		
 	Global.world3d.add_child(fresh)
-	current_3d_scene.queue_free()
 	current_3d_scene = fresh
+	
+	old.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	
 	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
+	
+	return fresh
 	
 #-----PLAYER STUFF-----	
 func reset_player() -> void:
-	Global.player.queue_free()
-	spawn_player()
+	#var target_player := get_tree().get_first_node_in_group("player")
+	#target_player.queue_free()
+	#target_player.remove_from_group("player")
+	for p in get_tree().get_nodes_in_group("player"):
+		p.queue_free()
 
 func _find_player_spawn() -> Marker3D:
 	var nodes := get_tree().get_nodes_in_group("player_spawn")
@@ -99,7 +112,7 @@ func _find_player_spawn() -> Marker3D:
 	return null
 	
 func _find_player() -> void:
-	var target_player = get_tree().get_first_node_in_group("player")
+	var target_player := get_tree().get_first_node_in_group("player")
 	SignalManager.emit_signal("pcam_find_player", target_player)
 	print("find player signal emitted")
 
@@ -110,11 +123,19 @@ func spawn_player() -> void:
 		return
 		
 	var scene = preload("res://Actors/Player Servan/Servan.tscn")
-	var new_player = scene.instantiate() as CharacterBody3D
+	var new_player = scene.instantiate() as Player
+	
 	player_parent.add_child(new_player)
 	new_player.global_transform.origin = spawn.global_transform.origin
 	new_player.add_to_group("player")
 	SignalManager.emit_signal("player_spawned", new_player)
+
+func restart_level_and_respawn() -> void:
+	InputHandler.game_paused = false
+	reset_player()
+	restart_active_world()
+	spawn_player()
+	
 
 
 #-----HITSTUN-----

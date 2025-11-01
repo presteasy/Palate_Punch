@@ -1,13 +1,69 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsyony1kyvsin"]
+[gd_scene load_steps=12 format=3 uid="uid://dsyony1kyvsin"]
 
 [ext_resource type="Script" uid="uid://gopicv7dkw3c" path="res://Scenes/Dummy/dummy_01.gd" id="1_2e4ns"]
 [ext_resource type="Script" uid="uid://g2d75qshsofn" path="res://Scenes/Dummy/SM_dummy_01.gd" id="2_ejwvl"]
 [ext_resource type="Script" uid="uid://n4wl06hgeu8e" path="res://Nodes/Frames/frame_data.gd" id="3_kpffn"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kpffn"]
+albedo_color = Color(0.94509804, 0.078431375, 0.27058825, 1)
+
+[sub_resource type="Animation" id="Animation_kpffn"]
+resource_name = "HITSTUN"
+length = 0.43333668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("StandardMaterial3D_kpffn")]
+}
+
+[sub_resource type="Animation" id="Animation_nkq17"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [null]
+}
+
+[sub_resource type="Animation" id="Animation_33db3"]
+resource_name = "STAND"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:material_override")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [null]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_33db3"]
+_data = {
+&"HITSTUN": SubResource("Animation_kpffn"),
+&"RESET": SubResource("Animation_nkq17"),
+&"STAND": SubResource("Animation_33db3")
+}
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7gji8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2e4ns"]
-albedo_color = Color(0.884314, 3.0563e-06, 1.82897e-06, 1)
+albedo_color = Color(0.66440564, 0.60074294, 0.62144893, 1)
 metallic_specular = 0.71
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_c02bp"]
@@ -15,9 +71,16 @@ material = SubResource("StandardMaterial3D_2e4ns")
 
 [node name="Dummy" type="CharacterBody3D"]
 collision_layer = 8
-collision_mask = 51
+collision_mask = 114
+slide_on_ceiling = false
 script = ExtResource("1_2e4ns")
 weight = 100
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_33db3")
+}
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_7gji8")
@@ -57,3 +120,8 @@ text = "Test"
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0109791, 1.44726, 0.0837319)
 text = "100"
+
+[node name="Percent" type="Label3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6732769, 0)
+text = "0"

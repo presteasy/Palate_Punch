@@ -9,6 +9,7 @@ func _ready() -> void:
 	add_state('HITSTOP')
 	add_state('HITSTUN')
 	add_state('AIR')
+	add_state('LANDING')
 	call_deferred("set_state", states.STAND)
 
 func get_transition(delta):
@@ -32,7 +33,7 @@ func get_transition(delta):
 				parent.vdecay = vd
 				return states.HITSTUN
 			parent.position = pos
-			return
+			return states.AIR
 			
 		states.HITSTUN:
 			print("Dummy is HitSTUN!")
@@ -76,19 +77,31 @@ func get_transition(delta):
 				framedata._frame()
 				parent.velocity.y = 0
 				return states.STAND
-			
+
+		states.LANDING:
+			if framedata.frame <= framedata.landing_lag_frames + framedata.lag_frames:
+				if parent.velocity.x > 0:
+					parent.velocity.x =  parent.velocity.x - parent.traction/2
+					parent.velocity.x = clampf(parent.velocity.x, 0 , parent.velocity.x)
+				elif parent.velocity.x < 0:
+					parent.velocity.x =  parent.velocity.x + parent.traction/2
+					parent.velocity.x = clampf(parent.velocity.x, parent.velocity.x, 0 )
 
 
 func enter_state(new_state, old_state):
 	match new_state:
 		states.STAND:
+			parent.play_animation("STAND")
 			parent.state_label.text = str("STAND")
 		states.HITSTUN:
+			parent.play_animation("HITSTUN")
 			parent.state_label.text = str("HITSTUN")
 		states.HITSTOP:
 			parent.state_label.text = str("HITSTOP")
 		states.AIR:
 			parent.state_label.text = str("AIR")
+		states.LANDING:
+			parent.state_label.text = str("LANDING")
 
 
 func state_includes(state_array):

@@ -7,6 +7,8 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_q74lo"]
 
 [node name="apple_collectable" type="StaticBody3D"]
+collision_layer = 128
+collision_mask = 0
 script = ExtResource("1_ipdwa")
 item = ExtResource("2_q74lo")
 

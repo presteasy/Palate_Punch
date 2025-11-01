@@ -331,8 +331,173 @@ func angle_flipperv2(body_vel: Vector3, body_position: Vector3, hdecay = 0, vdec
 			vdecay = getVerticalDecay(angle)
 			return ([body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay])
 		
-		8:	# Vertical UP
-			pass
+		8:	# Downward Spike (pure/down-forward, facing-aware)
+			# Use 'angle' if it's already negative (e.g., -30), otherwise default to -60
+			var send_deg := -60.0
+			if float(angle) < 0.0:
+				send_deg = float(angle)
+			# Flip horizontally if attacker is facing left (add 180)
+			if get_parent().direction() == -1:
+				send_deg = send_deg + 180.0
+			body_vel.x = getHorizontalVelocity(knockbackVal, send_deg)
+			body_vel.y = getVerticalVelocity(knockbackVal, send_deg)  # will be negative for downward angles
+			hdecay = getHorizontalDecay(abs(send_deg))
+			vdecay = getVerticalDecay(abs(send_deg))
+			return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
 		
-		9: # Downward Spike
-			pass
+		9: # Vertical
+			var up_angle := 90.0
+			body_vel.x = 0.0
+			body_vel.y = getVerticalVelocity(knockbackVal, up_angle)
+			hdecay = 0.0
+			vdecay = getVerticalDecay(up_angle)
+			return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+
+#func angle_flipperv2(body_vel: Vector3, body_position: Vector3, hdecay := 0, vdecay := 0):
+	#var xangle := 0.0
+	#if get_parent().direction() == -1:
+		#xangle = (-(((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI) + 180.0
+	#else:
+		#xangle = (((body_position.direction_to(get_parent().global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI + 180.0
+#
+	#match angle_flipper:
+		#0: # Same Knockback (use 'angle' as-is)
+			#body_vel.x = getHorizontalVelocity(knockbackVal, -float(angle))
+			#body_vel.y = getVerticalVelocity(knockbackVal, float(angle))
+			#hdecay = getHorizontalDecay(-float(angle))
+			#vdecay = getVerticalDecay(-float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#1: # Sends away from center of enemy player
+			#if get_parent().direction() == -1:
+				#xangle = -(((self.global_transform.origin.direction_to(body_position)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#else:
+				#xangle = (((self.global_transform.origin.direction_to(body_position)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#body_vel.x = getHorizontalVelocity(knockbackVal, xangle + 180.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -xangle)
+			#hdecay = getHorizontalDecay(float(angle) + 180.0)
+			#vdecay = getVerticalDecay(xangle)
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#2: # Sends toward center of enemy player
+			#if get_parent().direction() == -1:
+				#xangle = -(((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#else:
+				#xangle = (((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#body_vel.x = getHorizontalVelocity(knockbackVal, -xangle + 180.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -xangle)
+			#hdecay = getHorizontalDecay(xangle + 180.0)
+			#vdecay = getVerticalDecay(xangle)
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#3: # Horizontal knockback away from the hitbox center (with extra +135 skew)
+			#if get_parent().direction() == -1:
+				#xangle = (-(((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI) + 180.0
+			#else:
+				#xangle = (((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#body_vel.x = getHorizontalVelocity(knockbackVal, xangle + 135.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, float(angle))
+			#hdecay = getHorizontalDecay(xangle + 135.0)
+			#vdecay = getVerticalDecay(float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#4: # Horizontal knockback toward the center of the hitbox
+			#if get_parent().direction() == -1:
+				#xangle = -(((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI + 180.0
+			#else:
+				#xangle = (((body_position.direction_to(self.global_transform.origin)).angle_to(get_parent().global_transform.basis.x)) * 180.0) / PI
+			#body_vel.x = getHorizontalVelocity(knockbackVal, -xangle + 180.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -float(angle))
+			#hdecay = getHorizontalDecay(float(angle))
+			#vdecay = getVerticalDecay(float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#5: # Horizontal knockback reversed (flip 180 relative to 'angle')
+			#body_vel.x = getHorizontalVelocity(knockbackVal, float(angle) + 180.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -float(angle))
+			#hdecay = getHorizontalDecay(float(angle) + 180.0)
+			#vdecay = getVerticalDecay(float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#6: # Horizontal knockback away from the enemy player (uses bearing xangle)
+			#body_vel.x = getHorizontalVelocity(knockbackVal, xangle)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -float(angle))
+			#hdecay = getHorizontalDecay(xangle)
+			#vdecay = getVerticalDecay(float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#7: # Horizontal knockback toward the enemy player
+			#body_vel.x = getHorizontalVelocity(knockbackVal, -xangle + 180.0)
+			#body_vel.y = getVerticalVelocity(knockbackVal, -float(angle))
+			#hdecay = getHorizontalDecay(float(angle))
+			#vdecay = getVerticalDecay(float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#8: # Vertical UP (pure vertical launch)
+			#var up_angle := 90.0
+			#body_vel.x = 0.0
+			#body_vel.y = getVerticalVelocity(knockbackVal, up_angle)
+			#hdecay = 0.0
+			#vdecay = getVerticalDecay(up_angle)
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#9: # Downward Spike (pure/down-forward, facing-aware)
+			## Use 'angle' if it's already negative (e.g., -30), otherwise default to -60
+			#var send_deg := -60.0
+			#if float(angle) < 0.0:
+				#send_deg = float(angle)
+			## Flip horizontally if attacker is facing left (add 180)
+			#if get_parent().direction() == -1:
+				#send_deg = send_deg + 180.0
+			#body_vel.x = getHorizontalVelocity(knockbackVal, send_deg)
+			#body_vel.y = getVerticalVelocity(knockbackVal, send_deg)  # will be negative for downward angles
+			#hdecay = getHorizontalDecay(abs(send_deg))
+			#vdecay = getVerticalDecay(abs(send_deg))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#10: # Pure forward (0° if facing right, 180° if facing left)
+			#var fwd_deg := 0.0
+			#if get_parent().direction() == -1:
+				#fwd_deg = 180.0
+			#else:
+				#fwd_deg = 0.0
+			#body_vel.x = getHorizontalVelocity(knockbackVal, fwd_deg)
+			#body_vel.y = getVerticalVelocity(knockbackVal, fwd_deg)
+			#hdecay = getHorizontalDecay(fwd_deg)
+			#vdecay = getVerticalDecay(fwd_deg)
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#11: # Pure down (−90° straight down)
+			#var down_deg := -90.0
+			#body_vel.x = getHorizontalVelocity(knockbackVal, down_deg)  # ~0
+			#body_vel.y = getVerticalVelocity(knockbackVal, down_deg)    # negative
+			#hdecay = getHorizontalDecay(abs(down_deg))
+			#vdecay = getVerticalDecay(abs(down_deg))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#12: # Autolink toward attacker with slight upward bias (+20°), clamped
+			## Vector from target to attacker (use hitbox's parent as attacker center)
+			#var attacker_pos = get_parent().global_transform.origin
+			#var to_attacker = attacker_pos - body_position
+			## Derive base angle in degrees in X/Y plane
+			#var base_deg := rad2deg(atan2(to_attacker.y, to_attacker.x))
+			## Add a gentle upward bias
+			#var biased_deg := base_deg + 20.0
+			## Clamp so it doesn't become a pure vertical launcher
+			#if biased_deg > 80.0:
+				#biased_deg = 80.0
+			#if biased_deg < -80.0:
+				#biased_deg = -80.0
+			#body_vel.x = getHorizontalVelocity(knockbackVal, biased_deg)
+			#body_vel.y = getVerticalVelocity(knockbackVal, biased_deg)
+			#hdecay = getHorizontalDecay(abs(biased_deg))
+			#vdecay = getVerticalDecay(abs(biased_deg))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]
+#
+		#_:
+			## Fallback: behave like "Same Knockback"
+			#body_vel.x = getHorizontalVelocity(knockbackVal, -float(angle))
+			#body_vel.y = getVerticalVelocity(knockbackVal, float(angle))
+			#hdecay = getHorizontalDecay(-float(angle))
+			#vdecay = getVerticalDecay(-float(angle))
+			#return [body_vel.x, body_vel.y, body_vel.z, hdecay, vdecay]

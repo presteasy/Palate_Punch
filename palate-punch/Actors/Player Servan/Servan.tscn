@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://oeqbt6w1xcag"]
+[gd_scene load_steps=66 format=3 uid="uid://oeqbt6w1xcag"]
 
 [ext_resource type="Script" uid="uid://1kopyvtybxil" path="res://Actors/Player Servan/player.gd" id="1_8221m"]
 [ext_resource type="Resource" uid="uid://cxf35m3jj3nr7" path="res://Resources/Items/Player Inventory/playerinventory.tres" id="2_s8vdf"]
@@ -40,6 +40,7 @@
 [ext_resource type="Script" uid="uid://rhda5edsosjx" path="res://Nodes/HitboxAttackRunner/hb_atk_runner.gd" id="36_wk4yc"]
 [ext_resource type="PackedScene" uid="uid://dpgftsxua6f74" path="res://Nodes/Hitbox/hitbox.tscn" id="36_wy3gy"]
 [ext_resource type="Script" uid="uid://cblnvanemuo3v" path="res://Resources/Moves/Attacks/atk_list.gd" id="37_c8a24"]
+[ext_resource type="Script" uid="uid://hctx48buf3ic" path="res://Nodes/InputBuffer/input_buffer.gd" id="39_w7wk6"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vhmkq"]
 animations = [{
@@ -889,6 +890,7 @@ max_jump_force = 13
 double_jump_force = 8
 max_air_speed = 4
 air_accel = 3
+falling_speed = 15
 max_fall_speed = 13
 
 [node name="Graphics" type="Node3D" parent="."]
@@ -919,7 +921,7 @@ debug_color = Color(0.841144, 0.351356, 0.28334, 1)
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.110423, 0, 0)
 script = ExtResource("36_wk4yc")
-framedata = NodePath("../../FrameData")
+framedata = NodePath("../../Frame Nodes/FrameData")
 metadata/_custom_type_script = "uid://rhda5edsosjx"
 
 [node name="ATKList" type="Node" parent="Attacks"]
@@ -933,16 +935,24 @@ visible = false
 shape = SubResource("CapsuleShape3D_c8a24")
 debug_color = Color(0.271527, 0.662481, 0, 1)
 
-[node name="FrameData" type="Node" parent="."]
+[node name="Frame Nodes" type="Node" parent="."]
+
+[node name="FrameData" type="Node" parent="Frame Nodes" node_paths=PackedStringArray("input_buffer")]
 unique_name_in_owner = true
 script = ExtResource("3_b7mwj")
+input_buffer = NodePath("../InputBuffer")
 landing_lag_frames = 5
 metadata/_custom_type_script = "uid://n4wl06hgeu8e"
+
+[node name="InputBuffer" type="Node" parent="Frame Nodes"]
+unique_name_in_owner = true
+script = ExtResource("39_w7wk6")
+metadata/_custom_type_script = "uid://hctx48buf3ic"
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("framedata")]
 unique_name_in_owner = true
 script = ExtResource("4_6rere")
-framedata = NodePath("../FrameData")
+framedata = NodePath("../Frame Nodes/FrameData")
 
 [node name="InventoryUI" parent="." instance=ExtResource("3_qkdr7")]
 process_mode = 3

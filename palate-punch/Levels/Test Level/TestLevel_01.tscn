@@ -38,7 +38,7 @@ shading_mode = 0
 [sub_resource type="PlaneMesh" id="PlaneMesh_c02bp"]
 material = SubResource("StandardMaterial3D_7gji8")
 
-[node name="TestLevel01" type="Node3D"]
+[node name="TestLevel01" type="Node3D" groups=["level"]]
 script = ExtResource("1_l0wkj")
 
 [node name="Floor" type="Node" parent="."]

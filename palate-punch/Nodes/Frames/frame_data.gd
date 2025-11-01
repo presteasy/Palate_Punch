@@ -3,12 +3,11 @@ class_name FrameData
 
 @onready var parent = get_parent()
 
+@export var input_buffer : Node
+
 const FPS: float = 60.0
-
 var frame: int = 0
-
 var global_frame: int = 0
-
 @export var lag_frames: int = 0
 @export var landing_lag_frames: int = 0
 var hitstop_frames: int = 0
@@ -43,9 +42,13 @@ func _frame() -> void:
 func _physics_process(delta: float) -> void:
 	if hitstop_frames > 0:
 		hitstop_frames -= 1
+		if input_buffer:
+			input_buffer.tick(frame)
 		return
 	update_frames(delta)
 	
+	if input_buffer:
+		input_buffer.tick(global_frame)
 
 	
 	

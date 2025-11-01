@@ -9,8 +9,11 @@ var selfState
 @onready var GroundL = %GroundL
 @onready var GroundR = %GroundR
 @onready var state_label = %StateLabel
+@onready var percent_label = %Percent
 @onready var framedata = %FrameData
 @onready var statemachine = %StateMachine
+@onready var anim = %AnimationPlayer
+
 
 
 @export_group("Aerial Movement")
@@ -36,10 +39,16 @@ func _ready() -> void:
 	
 func _physics_process(delta):
 	selfState = state_label.text
-	%Frames.text = str(framedata.frame)	
+	%Frames.text = str(framedata.frame)
+	percent_label.text = str(percentage)
+	
 
 func _on_hit_landed() -> void:
 	print("hit landed")
+	
+func play_animation(animation_name):
+	anim.play(animation_name)
+	
 
 func _hit_pause(delta):
 	if hit_pause < hit_pause_dur:

@@ -147,7 +147,7 @@ func get_transition(delta):
 						framedata._frame()
 						return states.PUNCH_01
 					
-				if Input.is_action_pressed("down_%s" % id):
+				if Input.get_action_strength("down_%s" % id) == 1:
 					framedata._frame()
 					return states.CROUCH
 				
@@ -165,6 +165,7 @@ func get_transition(delta):
 				parent.can_run = false
 				if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
 					framedata._frame()
+					parent.can_run = true
 					return states.CRAWL
 
 				if not Input.is_action_pressed("down_%s" % id):

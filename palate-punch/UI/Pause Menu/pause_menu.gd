@@ -56,9 +56,7 @@ func _on_resume_button_pressed() -> void:
 
 
 func _on_restart_button_pressed() -> void:
-	InputHandler.game_paused = false
-	Global.game_controller.restart_active_world()
-	Global.game_controller.reset_player()
+	Global.game_controller.restart_level_and_respawn()
 
 
 func _on_quit_button_pressed() -> void:

@@ -5,62 +5,50 @@
 
 [sub_resource type="Resource" id="Resource_jlnoa"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_15dvn"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_joiva"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_dfkvw"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_5qh81"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_vbnf6"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_de6v6"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_6rv5f"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_v1au7"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_acv56"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_2fie2"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [sub_resource type="Resource" id="Resource_juwrg"]
 script = ExtResource("2_jlnoa")
-amount = 0
 metadata/_custom_type_script = "uid://d1risd666i55"
 
 [resource]
