@@ -135,7 +135,7 @@ func Hitbox_Collide(body):
 				bodyframe = body.get_node("FrameData")
 				bodyframe._frame()
 				
-				Global.game_controller.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
+				Global.game_controller.freeze_hitstop(hitlag(damage,hitlag_modifier))
 				get_parent().hit_pause_dur = duration - framez
 				get_parent().temp_pos = get_parent().position
 				get_parent().temp_vel = get_parent().velocity

@@ -29,7 +29,7 @@ func _input(event : InputEvent):
 	if InputHandler.is_ui_mode() && InputHandler.pause_open == true:
 		if event.is_action_pressed("escape_%s" % Global.player.id) or event.is_action_pressed("special_%s" % Global.player.id):
 			InputHandler.game_paused = !InputHandler.game_paused
-		if event.is_action_pressed("jump_1"):
+		if event.is_action_pressed("jump_%s" % Global.player.id):
 			if resume_button.has_focus():
 				_on_resume_button_pressed()
 			if restart_button.has_focus():
@@ -49,7 +49,21 @@ func toggle_pause_menu():
 func _on_resume_button_pressed() -> void:
 	hide()
 	InputHandler.game_paused = false
-	await get_tree().create_timer(0.5).timeout
+	
+	var player_id = Global.player.id
+	while Input.is_action_pressed("jump_%s" % player_id) or Input.is_action_pressed("ui_accept"):
+		await get_tree().process_frame
+	
+	await get_tree().create_timer(1).timeout
+	
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		var input_buffer = player.get_node_or_null("%InputBuffer")
+		if input_buffer:
+			input_buffer.clear_all()
+	
+
+	
 	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
 	
 	
@@ -57,6 +71,7 @@ func _on_resume_button_pressed() -> void:
 
 func _on_restart_button_pressed() -> void:
 	Global.game_controller.restart_level_and_respawn()
+	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
 
 
 func _on_quit_button_pressed() -> void:

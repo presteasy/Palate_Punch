@@ -13,4 +13,5 @@ func _input(event: InputEvent) -> void:
 func _on_pressed() -> void:
 	Global.game_controller.change_gui_to_3d("res://Levels/Test Level/TestLevel_01.tscn", true, false)
 	Global.game_controller.spawn_player()
+	await get_tree().create_timer(1.0).timeout
 	InputHandler.game_mode = true

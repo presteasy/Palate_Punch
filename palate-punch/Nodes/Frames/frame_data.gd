@@ -37,18 +37,19 @@ func apply_hitstop_frames(duration: int) -> void:
 	hitstop_frames = duration
 	
 func _frame() -> void:
+	#print("🔴 _frame() RESET called! Stack trace:")
+	#print_stack()
 	frame = 0
 	
 func _physics_process(delta: float) -> void:
-	if hitstop_frames > 0:
-		hitstop_frames -= 1
+	if InputHandler.is_gameplay_mode() == true:
+		if hitstop_frames > 0:
+			hitstop_frames -= 1
 		if input_buffer:
 			input_buffer.tick(frame)
-		return
-	update_frames(delta)
-	
-	if input_buffer:
-		input_buffer.tick(global_frame)
+
+		update_frames(delta)
+
 
 	
 	

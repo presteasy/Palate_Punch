@@ -17,5 +17,5 @@ type = "normal"
 points = Vector3(0.674, 0.134, 0)
 angle_flipper = 9
 frame_start = 3
-frame_end = 10
+frame_end = 15
 metadata/_custom_type_script = "uid://bk4hnjp0ffakm"

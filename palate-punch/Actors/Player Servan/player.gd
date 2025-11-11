@@ -14,6 +14,7 @@ extends CharacterBody3D
 @onready var framedata = %FrameData
 @onready var hurtbox = %HurtBox
 @onready var statemachine: Node = %StateMachine
+@onready var input_buffer: Node = %InputBuffer
 
 @export var hitbox: PackedScene
 
@@ -56,10 +57,10 @@ var is_crouching: bool = false
 @export var jump_force = 10
 @export var max_jump_force = 16
 @export var double_jump_force = 14
-@export var max_air_speed = 6
-@export var air_accel = 5
+@export var max_air_speed: float = 6.0
+@export var air_accel: float = 5.0
 @export var fall_speed = 0.7
-@export var falling_speed = 18
+@export var falling_speed: float = 18
 @export var max_fall_speed = 28
 @export var traction = 120
 @export var air_dodge_speed = 500
@@ -83,6 +84,21 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	Global.player = self
+	await get_tree().process_frame
+	input_buffer.clear_all()
+	
+	
+	input_buffer.arm(PackedStringArray([
+		"attack_%s" % id,
+		"special_%s" % id,
+		"jump_%s" % id,
+		"block_%s" % id,
+		"left_%s" % id,
+		"right_%s" % id,
+		"down_%s" % id,
+		"up_%s" % id
+		
+	]))
 	
 	
 func _physics_process(delta):
@@ -141,14 +157,17 @@ func play_animation(animation_name):
 func collect(item):
 	inv.insert(item)
 
-func _hit_pause(delta):
-	if hit_pause < hit_pause_dur:
-		self.position = temp_pos
-		hit_pause += floor((1 * delta) * 60)
-	else:
-		if temp_vel != Vector3.ZERO:
-			self.velocity.x = temp_vel.x
-			self.velocity.y = temp_vel.y
-			temp_vel = Vector3.ZERO
-		hit_pause_dur = 0
-		hit_pause = 0
+#func _hit_pause(delta):
+	#if hit_pause < hit_pause_dur:
+		#self.position = temp_pos
+		#hit_pause += floor((1 * delta) * 60)
+	#else:
+		#if temp_vel != Vector3.ZERO:
+			#self.velocity.x = temp_vel.x
+			#self.velocity.y = temp_vel.y
+			#temp_vel = Vector3.ZERO
+		#hit_pause_dur = 0
+		#hit_pause = 0
+
+func practice():
+	pass

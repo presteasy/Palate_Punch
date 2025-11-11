@@ -3,6 +3,7 @@ class_name StateMachineServan
 
 @onready var id = get_parent().id
 @onready var hb_atk_runner: Node3D = %HitboxATKRunner
+@onready var input_buffer: Node = %InputBuffer
 
 @export_group("Nodes")
 @export var framedata : FrameData
@@ -65,6 +66,8 @@ func _ready() -> void:
 	
 func get_transition(delta):
 	#print(parent.GroundL.is_colliding())
+	#print("🔵 get_transition called | Frame: ", framedata.frame, " | State: ", state, " | Physics Frame: ", Engine.get_physics_frames())
+	
 	if InputHandler.current_input_mode == InputHandler.InputMode.UI:
 		return
 	else:
@@ -81,29 +84,47 @@ func get_transition(delta):
 			return states.AIR
 		
 #-----AIREAL ATTACKS-----
-		if Input.is_action_just_pressed("attack_%s" % id) && AIREAL() == true:
+		if input_buffer.is_buffered("attack_%s" % id) && AIREAL() == true:
 			parent.connected = false
-			if Input.is_action_pressed("up_%s" % id):
+			
+			if input_buffer.is_buffered("up_%s" % id):
+				input_buffer.consume("attack_%s" % id)
+				input_buffer.consume("up_%s" % id)
 				framedata._frame()
 				return states.UAIR
-			if Input.is_action_pressed("down_%s" % id):
+				
+			if input_buffer.consume("down_%s" % id):
+				input_buffer.consume("attack_%s" % id)
+				input_buffer.consume("down_%s" % id)
 				framedata._frame()
 				return states.DAIR
-			match parent.direction():
-				1:
-					if Input.is_action_pressed("left_%s" % id):
-						framedata._frame()
-						return states.BAIR
-					if Input.is_action_pressed("right_%s" % id):
-						framedata._frame()
-						return states.FAIR
-				-1:
-					if Input.is_action_pressed("right_%s" % id):
-						framedata._frame()
-						return states.BAIR
-					if Input.is_action_pressed("left_%s" % id):
-						framedata._frame()
-						return states.FAIR
+				
+			var facing_right = parent.direction() == 1
+			
+			if facing_right:
+				if input_buffer.is_buffered("right_%s" % id):
+					input_buffer.consume("attack_%s" % id)
+					input_buffer.consume("right_%s" % id)
+					framedata._frame()
+					return states.FAIR
+				if input_buffer.is_buffered("left_%s" % id):
+					input_buffer.consume("attack_%s" % id)
+					input_buffer.consume("left_%s" % id)
+					framedata._frame()
+					return states.BAIR
+			else:
+				if input_buffer.is_buffered("right_%s" % id):
+					input_buffer.consume("attack_%s" % id)
+					input_buffer.consume("right_%s" % id)
+					framedata._frame()
+					return states.BAIR
+				if input_buffer.is_buffered("left_%s" % id):
+					input_buffer.consume("attack_%s" % id)
+					input_buffer.consume("left_%s" % id)
+					framedata._frame()
+					return states.FAIR
+					
+			input_buffer.consume("attack_%s" % id)
 			framedata._frame()
 			return states.NAIR
 
@@ -143,19 +164,25 @@ func get_transition(delta):
 				#if Input.is_action_just_pressed("special_%s" % id):
 					#parent._frame()
 					#return states.N_SPECIAL
-				if Input.is_action_just_pressed("attack_%s" % id):
-						framedata._frame()
-						return states.PUNCH_01
+
+				if input_buffer.is_buffered("attack_%s" % id):
+					input_buffer.consume("attack_%s" % id)
+					framedata._frame()
+					return states.PUNCH_01
 					
-				if Input.get_action_strength("down_%s" % id) == 1:
+				#if Input.is_action_pressed("down_%s" % id):
+				if input_buffer.consume("down_%s" % id):
 					framedata._frame()
 					return states.CROUCH
 				
-				if Input.is_action_just_pressed("block_%s" % id):
+				#if Input.is_action_just_pressed("block_%s" % id):
+				if input_buffer.is_buffered("block_%s" % id):
+					input_buffer.consume("block_%s" % id)
 					framedata._frame()
 					return states.BLOCK
 					
-				if Input.is_action_just_pressed("jump_%s" % id):
+				if input_buffer.is_buffered("jump_%s" % id):
+					input_buffer.consume("jump_%s" % id)
 					framedata._frame()
 					return states.JUMP_SQUAT
 				
@@ -163,15 +190,32 @@ func get_transition(delta):
 						
 			states.CROUCH:
 				parent.can_run = false
-				if Input.is_action_pressed("down_%s" % id) and Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id):
+				
+				var move_x = Input.get_action_strength("right_%s" % id) - Input.get_action_strength("left_%s" % id)
+				var input_magnitude = abs(move_x)
+				
+				#if input_magnitude > 0.8:
+					#framedata._frame()
+					#parent.can_run = true
+					#return states.DASH
+				if input_magnitude > 0.1:
 					framedata._frame()
 					parent.can_run = true
 					return states.CRAWL
+				
+				if input_buffer.consume("jump_%s" % id):
+					input_buffer.consume("down_%s" % id)
+					framedata._frame()
+					parent.can_run = true
+					return states.JUMP_SQUAT
+
 
 				if not Input.is_action_pressed("down_%s" % id):
 					framedata._frame()
 					parent.can_run = true
 					return states.STAND
+				
+			
 				
 
 				#if Input.is_action_pressed("block_%s" % id):
@@ -307,11 +351,11 @@ func get_transition(delta):
 
 	#====== MOVEMENT ======
 			states.DASH:
-				if Input.is_action_just_pressed("down_%s" % id):
+				if input_buffer.consume("down_%s" % id):
 					framedata._frame()
 					return states.CROUCH
 					
-				if Input.is_action_just_pressed("jump_%s" % id):
+				if input_buffer.consume("jump_%s" % id):
 					framedata._frame()
 					
 					if abs(parent.velocity.x) > parent.dash_jump_limit:
@@ -368,7 +412,7 @@ func get_transition(delta):
 										#framedata._frame()
 										#return states.STAND
 				
-				if Input.is_action_just_pressed("attack_%s" % id):
+				if input_buffer.consume("attack_%s" % id):
 						framedata._frame()
 						return states.PUNCH_01
 				
@@ -378,7 +422,7 @@ func get_transition(delta):
 				
 					
 			states.RUN:
-				if Input.is_action_just_pressed("jump_%s" % id):
+				if input_buffer.consume("jump_%s" % id):
 					framedata._frame()
 					return states.JUMP_SQUAT
 					
@@ -415,7 +459,7 @@ func get_transition(delta):
 				
 				
 				
-				if Input.is_action_just_pressed("attack_%s" % id):
+				if input_buffer.consume("attack_%s" % id):
 					framedata._frame()
 					return states.PUNCH_01
 				#if Input.is_action_just_pressed("special_%s" % id):
@@ -423,7 +467,7 @@ func get_transition(delta):
 					#return states.F_SPECIAL
 
 			states.TURN:
-				if Input.is_action_just_pressed("jump_%s" % id):
+				if input_buffer.consume("jump_%s" % id):
 					framedata._frame()
 					return states.JUMP_SQUAT 
 				if parent.velocity.x > 0:
@@ -533,10 +577,10 @@ func get_transition(delta):
 					elif Input.is_action_pressed("right_%s" % id):
 						parent.velocity.x = parent.max_air_speed
 						
-				#Air Attacks
-				if Input.is_action_just_pressed("attack_%s" % id):
-					framedata._frame()
-					return states.NAIR
+				##Air Attacks
+				#if Input.is_action_just_pressed("attack_%s" % id):
+					#framedata._frame()
+					#return states.NAIR
 					
 				
 				
@@ -642,7 +686,7 @@ func get_transition(delta):
 				
 					
 				#Facing Right
-				if parent.Ledge_Grab_F.rotation_degrees.z > 0:
+				if parent.Ledge_Grab_F.rotation_degrees.z > 0: #fix?
 					if Input.is_action_just_pressed("left_%s" % id):
 						parent.velocity.x = (parent.air_accel / 2)
 						parent.regrab = 30
@@ -810,14 +854,20 @@ func get_transition(delta):
 				
 	#====== GROUNDED ATKS ======
 			states.PUNCH_01:
-				parent.can_run = false
+				#parent.can_run = false
+				
 				if framedata.frame == 0:
 					hb_atk_runner.PUNCH_01()
 					pass
+					
+				if framedata.frame <= 5 and parent.current_direction != 0:
+					var lunge_speed = 3.0
+					parent.velocity.x = parent.current_direction * lunge_speed
+					
 				if hb_atk_runner.PUNCH_01() == true:
-					if framedata.frame >= 10:
+					if framedata.frame >= 20:
 						framedata._frame()
-						parent.can_run = true
+						#parent.can_run = true
 						return states.STAND
 
 			states.F_SMASH:
@@ -871,6 +921,7 @@ func get_transition(delta):
 				if parent.is_on_floor():
 					parent.reset_jumps()
 					parent.velocity.y = 0
+					framedata.landing_lag_frames = 10
 					return states.LANDING
 
 			states.FAIR:
@@ -984,7 +1035,7 @@ func enter_state(new_state, old_state):
 			parent.play_animation("WALK")
 			parent.state_label.text = str("WALK")
 		states.CRAWL:
-			pass
+			parent.state_label.text = str("CRAWL")
 #====== AIREAL MOVEMENT ======
 		states.JUMP_SQUAT:
 			parent.play_animation("JUMPSQUAT")
@@ -997,6 +1048,7 @@ func enter_state(new_state, old_state):
 			parent.play_animation("AIR")
 			parent.state_label.text = str("AIR")
 		states.LANDING:
+			input_buffer.clear_actions(["jump_%s" % id, "up_%s" % id])
 			parent.play_animation("LANDING")
 			parent.state_label.text = str("LANDING")
 		states.FREE_FALL:
@@ -1198,7 +1250,8 @@ func AIRMOVEMENT():
 	if parent.velocity.y < parent.falling_speed:
 		parent.velocity.y -= parent.fall_speed
 	if Input.is_action_just_pressed("down_%s" % id) and parent.fastfall == false:
-		if parent.velocity.y < 0 and parent.velocity.y > -2:
+		#if parent.velocity.y < 0 and parent.velocity.y > -2:
+		if parent.velocity.y < -2:
 			parent.velocity.y = -parent.max_fall_speed
 			parent.fastfall = true
 			print("Fastfall is ", parent.fastfall)

@@ -55,6 +55,7 @@ func change_gui_to_3d(new_scene: String, delete: bool = true, keep_running: bool
 	var new = load(new_scene).instantiate()
 	world_3d.add_child(new)
 	current_3d_scene = new
+	await get_tree().create_timer(0.5).timeout
 	InputHandler.set_input_mode(InputHandler.InputMode.GAMEPLAY)
 
 func change_3d_to_gui(new_scene: String, delete: bool = true, keep_running: bool = false) -> void:
@@ -117,6 +118,8 @@ func _find_player() -> void:
 	print("find player signal emitted")
 
 func spawn_player() -> void:
+	print("🔴 spawn_player() CALLED!")
+	print_stack()
 	var spawn := _find_player_spawn()
 	if spawn == null:
 		push_warning("No Marker3D in group 'player_spawn' found.")
@@ -138,9 +141,10 @@ func restart_level_and_respawn() -> void:
 	
 
 
-#-----HITSTUN-----
-func hitstun(mod, duration):
-	Engine.time_scale = mod / 100
-	print(str(mod))
-	await get_tree().create_timer(duration * Engine.time_scale)
+#-----HITSTOP-----
+func freeze_hitstop(frames: int):
+	Engine.time_scale = 0.001
+	get_tree().paused = true
+	await get_tree().create_timer(frames / 60.0, PROCESS_MODE_ALWAYS).timeout
 	Engine.time_scale = 1
+	get_tree().paused = false

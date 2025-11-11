@@ -8,12 +8,16 @@ var states = {}
 @onready var parent = get_parent()
 
 func _physics_process(delta: float) -> void:
+	#print("🟢 _physics_process on node: ", get_path(), " | Parent: ", get_parent().name)
 	if state != null:
+		
+		var state_name = get_state_name()
+		print("Current State: ", state_name)
+		
 		state_logic(delta)
-		var transition = await get_transition(delta)
+		var transition = get_transition(delta)
 		if transition != null:
 			set_state(transition)
-
 func state_logic(delta):
 	pass
 	
@@ -38,8 +42,8 @@ func set_state(new_state):
 func add_state(state_name) -> void:
 	states[state_name] = states.size()
 	
-func get_current_state_name() -> String:
-	if state == null:
-		return "No State"
-	else:
-		return state
+func get_state_name() -> String:
+	for state_name in states:
+		if states[state_name] == state:
+			return state_name
+	return "UNKNOWN"
