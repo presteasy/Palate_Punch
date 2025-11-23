@@ -6,15 +6,15 @@ class_name Attacks
 @export var radius: float
 @export var height: float
 @export var depth: float
-@export var damage: int
+@export var damage: float
 @export var angle: int
-@export var base_kb: int
-@export var kb_scaling: int
-@export var duration: int
+@export var base_kb: float
+@export var kb_scaling: float
+@export var duration: float
 @export var type: String
 @export var points: Vector3
 @export var angle_flipper: int
-@export var hitlag: int
+@export var hitlag: float
 
 @export_category("Frame Info")
 @export var frame_start: int

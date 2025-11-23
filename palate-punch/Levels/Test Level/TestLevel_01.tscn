@@ -88,6 +88,7 @@ mesh = SubResource("BoxMesh_f2rwd")
 
 [node name="Door" parent="." instance=ExtResource("2_fwy8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.007, 0.106)
+target_scene = "uid://cnfgtgjpfrc3k"
 require_interact = true
 
 [node name="Lights" type="Node3D" parent="."]

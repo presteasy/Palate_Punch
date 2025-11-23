@@ -57,19 +57,35 @@ func _record_just_pressed() -> void:
 	for a in watched_actions:
 		if not InputMap.has_action(a):
 			continue
+		
+		var is_directional = (
+			a.begins_with("left_") or
+			a.begins_with("right_") or
+			a.begins_with("up_") or
+			a.begins_with("down_")
+		)
+		
+		
+		if is_directional:
+			var is_pressed = Input.is_action_pressed(a)
+			var was_held = _held_states.get(a, false)
+			_held_states[a] = is_pressed
 			
-		var is_pressed = Input.is_action_pressed(a)
-		var was_held = _held_states.get(a, false)
-		
-		_held_states[a] = is_pressed
-		
-		if is_pressed:
-			var new_expire := current_frame + default_window_frames
-			var old_expire: int = _buffer.get(a, -1)
-			if new_expire > old_expire:
-				_buffer[a] = new_expire
-				if not was_held:
+			if is_pressed:
+				var new_expire := current_frame + default_window_frames
+				var old_expire: int = _buffer.get(a, -1)
+				if new_expire > old_expire:
+					_buffer[a] = new_expire
+					if not was_held:
+						print("Buffered: ", a, " until frame", _buffer[a])
+		else:
+			if Input.is_action_just_pressed(a):
+				var new_expire := current_frame + default_window_frames
+				var old_expire: int = _buffer.get(a, -1)
+				if new_expire > old_expire:
+					_buffer[a] = new_expire
 					print("Buffered: ", a, " until frame", _buffer[a])
+		
 	
 func _prune_expired() -> void:
 	var to_remove := []
@@ -87,7 +103,7 @@ func buffer_action(action: StringName, window_frames: int = -1) -> void:
 	var old_expire : int = _buffer.get(action, -1)
 	if new_expire > old_expire:
 		_buffer[action] = new_expire
-		print("Buffered (manual): ", action, " until frame ", new_expire)
+		#print("Buffered (manual): ", action, " until frame ", new_expire)
 
 func is_held(action: StringName) -> bool:
 	return _held_states.get(action, false)
@@ -104,24 +120,24 @@ func consume(action: StringName) -> bool:
 
 	_consumed_at_frame[action] = current_frame
 	_buffer.erase(action)
-	print("Consumed: ", action, " at frame", current_frame)
+	#print("Consumed: ", action, " at frame", current_frame)
 	return true
 
 func clear_action(action: StringName) -> void:
 	_buffer.erase(action)
 	_consumed_at_frame.erase(action)
 	_held_states.erase(action)
-	print("Cleared action: ", action)
+	#print("Cleared action: ", action)
 	
 func clear_actions(actions: Array) -> void:
 	for action in actions:
 		clear_action(action)	
 	
 func clear_all() -> void:
-	print("📢 clear_all() called! Clearing buffers:")
-	print("   Buffered actions: ", _buffer.keys())
-	print("   Held states: ", _held_states.keys())
+	#print("📢 clear_all() called! Clearing buffers:")
+	#print("   Buffered actions: ", _buffer.keys())
+	#print("   Held states: ", _held_states.keys())
 	_buffer.clear()
 	_consumed_at_frame.clear()
 	_held_states.clear()
-	print("   ✅ All buffers cleared!")
+	#print("   ✅ All buffers cleared!")

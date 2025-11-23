@@ -49,100 +49,130 @@ func set_parameters(ot,r,h,de,d,a,b_kb,kb_s,dur,t,p,af,hit,parent=get_parent()):
 		update_dimensions(r, h)
 		connect("body_entered",Callable(self,"Hitbox_Collide"))
 		set_physics_process(true)
-		
-#func Hitbox_Collide(body):
-	#print("Hitbox collided with: ", body.name)
-	#if body.character_type == owner_type:
-		#if not body in player_list:
-			#player_list.append(body)
-			#if body.has_node("Health"):
-				#var health_node = body.get_node("Health")
-				#health_node.take_damage(damage)
-##				emit_signal("damage_dealt", damage, body)
-			#var charstate 
-			#charstate = body.get_node("StateMachine")
-			#weight = body.weight
-		#
-			#knockbackVal = knockback(damage,weight,kb_scaling,base_kb,1)
-			#match angle_flipper:
-				#0: # No Launch
-					#knockbackVal *= 0
-				#1: # Standard Launch
-					#knockbackVal *= 1
-				#2: # Upward Launch
-					#knockbackVal *= 2
-				#3: # Push Launch
-					#knockbackVal *= 3
-				#4: #High Standard Launch
-					#knockbackVal *= 4
-				#5: #High Upward Diagonal Launch
-					#knockbackVal *= 7
-				#_:
-					#knockbackVal *= 0
-					#
-			#charstate.state = charstate.states.HITFREEZE
-			#charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
-			#
-			#body.knockback = knockbackVal
-			#body.hitstun = getHitstun(knockbackVal/0.3)
-			#get_parent().connected = true
-			#body._frame()
-			#
-	##		Globals.hitstun(hitlag(damage,hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
-			#get_parent().hit_pause_dur = duration - framez
-			#get_parent().temp_pos = get_parent().position
-			#get_parent().temp_vel = get_parent().velocity
-	#
-	#emit_signal("hitbox_collided", self, body, knockbackVal)
 
+#func Hitbox_Collide(body):
+	#print("🔴 HIT DETECTED! Body: ", body.name, " | Hitlag modifier: ", hitlag_modifier)
+	##body = body.get_parent()
+	#var prop_list = body.get_property_list()
+	#var found: bool = false
+	#for prop in prop_list:
+		#if prop.name == "character_type":
+			#found = true
+			#break
+	#if found:
+		#if body.character_type != owner_type:
+			#if !(body.get_parent() in player_list):
+			##if body.name == "Parrybox":
+				##set_collision_mask_value(1,false)
+				##parry = true
+				##if get_parent().is_on_floor() == false:
+					##var selfstate = get_parent().get_node("StateMachine")
+					##selfstate.state = selfstate.states.STUNNED
+			##else:
+				##body = body.get_parent()
+				#player_list.append(body)
+				#if body.has_node("Health"):
+					#var health_node = body.get_node("Health")
+					#health_node.take_damage(damage)
+				##var charstate
+				##charstate = body.get_node("StateMachine")
+				#weight = body.weight
+				#body.percentage += damage
+				#knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
+				#s_angle(body)
+				##charstate.state = charstate.states.HITSTOP
+				##charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
+				#
+				#
+				#body.knockback = knockbackVal
+				#body.hitstun = getHitstun(knockbackVal/0.3)
+				#
+				#var bodyframe
+				#bodyframe = body.get_node("FrameData")
+				#bodyframe._frame()
+				#
+				#get_parent().hit_pause_dur = duration - framez
+				#get_parent().temp_pos = get_parent().position
+				#get_parent().temp_vel = get_parent().velocity
+				#get_parent().connected = true
+				#
+				#Global.game_controller.freeze_hitstop(hitlag(damage,hitlag_modifier))
+				#SignalManager.emit_signal("hit_landed")
+	#else:
+		#return
+	#print("Collided with: ", body, " Class: ", body.get_class())
 
 func Hitbox_Collide(body):
-	#body = body.get_parent()
 	var prop_list = body.get_property_list()
 	var found: bool = false
 	for prop in prop_list:
 		if prop.name == "character_type":
 			found = true
 			break
-	if found:
-		if body.character_type != owner_type:
-			if !(body.get_parent() in player_list):
-			#if body.name == "Parrybox":
-				#set_collision_mask_value(1,false)
-				#parry = true
-				#if get_parent().is_on_floor() == false:
-					#var selfstate = get_parent().get_node("StateMachine")
-					#selfstate.state = selfstate.states.STUNNED
-			#else:
-				#body = body.get_parent()
-				player_list.append(body)
-				if body.has_node("Health"):
-					var health_node = body.get_node("Health")
-					health_node.take_damage(damage)
-				var charstate
-				charstate = body.get_node("StateMachine")
-				weight = body.weight
-				body.percentage += damage
-				knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
-				s_angle(body)
-				charstate.state = charstate.states.HITSTOP
-				charstate.hitfreeze(hitlag(damage,hitlag_modifier),angle_flipperv2(Vector3(body.velocity.x,body.velocity.y,body.velocity.z),body.global_position))
-				
-				body.knockback = knockbackVal
-				body.hitstun = getHitstun(knockbackVal/0.3)
-				get_parent().connected = true
-				var bodyframe
-				bodyframe = body.get_node("FrameData")
-				bodyframe._frame()
-				
-				Global.game_controller.freeze_hitstop(hitlag(damage,hitlag_modifier))
-				get_parent().hit_pause_dur = duration - framez
-				get_parent().temp_pos = get_parent().position
-				get_parent().temp_vel = get_parent().velocity
-				SignalManager.emit_signal("hit_landed")
-	else:
+	if not found:
 		return
+		
+	if body.character_type == owner_type:
+		return
+	if body in player_list:
+		return
+				
+	player_list.append(body)
+	print("Hit registered! Applyingdamage and knockback")
+	print("   Initial percentage: ", body.percentage)
+	print("   Damage to apply: ", damage)
+	
+	if body.has_node("Health"):
+		var health_node = body.get_node("Health")
+		health_node.take_damage(damage)
+
+	weight = body.weight
+	print("   Weight: ", weight)
+	body.percentage += damage
+	print("Percentage: ", body.percentage)
+	
+	
+	var charstate = body.get_node("StateMachine")
+	knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
+	s_angle(body)
+	print("Knockback: ", knockbackVal)
+	
+	var kb_data = angle_flipperv2(Vector3(body.velocity.x, body.velocity.y, body.velocity.z), body.global_position)
+	print("   KB Data from angle_flipper ", angle_flipper, ": ", kb_data)
+	
+	body.hdecay = kb_data[3]
+	body.vdecay = kb_data[4]
+	body.knockback = knockbackVal
+	body.hitstun = getHitstun(knockbackVal/0.3)
+	
+	body.set_meta("pending_kb_x", kb_data[0])
+	body.set_meta("pending_kb_y", kb_data[1])
+	
+	var bodyframe = body.get_node("FrameData")
+	bodyframe._frame()
+	charstate.state = charstate.states.HITSTUN
+	
+	get_parent().connected = true
+	
+	SignalManager.emit_signal("hit_landed")
 	print("Collided with: ", body, " Class: ", body.get_class())
+	
+	print(" Starting Freeze...")
+	Global.game_controller.freeze_hitstop(hitlag(damage,hitlag_modifier))
+	print(" Freeze Ended!")
+	
+	#if body.has_meta("pending_kb_x"):
+		#body.velocity.x = body.get_meta("pending_kb_x")
+		#body.velocity.y = body.get_meta("pending_kb_y")
+		#print("   Applied velocity: x=", body.velocity.x, " y=", body.velocity.y)
+		#body.remove_meta("pending_kb_x")
+		#body.remove_meta("pending_kb_y")
+	#
+	#print("Applied knockback AFTEr freeze: ", body.velocity)
+	
+	#set_meta("hit_processed", true)
+	
+
 
 func update_dimensions(radius: float, height: float):
 	hitbox.shape.radius = radius
@@ -155,14 +185,23 @@ func _ready():
 	pass
 	
 func _physics_process(delta):
-	if framez<duration:
+	#if framez<duration:
+		#framez += 1
+	#elif framez == duration:
+		#Engine.time_scale = 1
+		#queue_free()
+		#return
+	#if get_parent().selfState != parentState:
+		#Engine.time_scale = 1
+		#queue_free()
+		#return
+	if framez < duration:
 		framez += 1
-	elif framez == duration:
-		Engine.time_scale = 1
+	else:
 		queue_free()
 		return
-	if get_parent().selfState != parentState:
-		Engine.time_scale = 1
+	
+	if get_parent() and get_parent().selfState != parentState:
 		queue_free()
 		return
 
@@ -171,10 +210,14 @@ func getHitstun (knockback):
 	#return floor(knockback * 0.4);
 
 func hitlag(d,hit):
-	damage = d
-	hitlag_modifier = hit
-	#return ((floor(d/3)+4)) 
-	return floor((((floor(d) * 0.65) + 6) * hit))
+	#damage = d
+	#hitlag_modifier = hit
+	###return ((floor(d/3)+4)) 
+	#return floor((((floor(d) * 0.65) + 6) * hit))
+	var base = 3.0
+	var damage_factor = floor(d / 3.0)
+	var result = floor((base + damage_factor) * hit)
+	return clamp(result, 2, 15)
 
 @export var percentage = 0
 @export var weight = 100
@@ -188,7 +231,7 @@ func knockback(p,d,w,ks,bk,r):
 	kb_scaling = ks
 	base_kb = bk
 	ratio = r
-	return ((((((((percentage/10) + (percentage*damage/20))*(200*1.4/(weight+100))) +18)*(kb_scaling))+base_kb)*1))*.003
+	return ((((((((percentage/10) + (percentage*damage/20))*(200*1.4/(weight+100))) +18)*(kb_scaling))+base_kb)*1))
 
 func s_angle(body):
 		if angle == 361:
@@ -230,14 +273,14 @@ func getVerticalDecay (angle):
 	return abs(decay)
 
 func getHorizontalVelocity (knockback, angle): # Function gets the horizontal knockback speed with total knockback and angle
-	var initialVelocity = knockback * 10; #Gets the initial velocity by multiplying knockback by 30
+	var initialVelocity = knockback * 0.3; #Gets the initial velocity by multiplying knockback by 30
 	var horizontalAngle = cos(angle * angleConversion); #Horizontal angle is calculated by cos formula, angle conversion puts the angle in Radians
 	var horizontalVelocity = initialVelocity * horizontalAngle; #Horizontal velocity is found by multiplying initial velocity by horizontal angle
 	horizontalVelocity = round(horizontalVelocity * 100000) / 100000; #Round to a whole number
 	return horizontalVelocity;
 
 func getVerticalVelocity (knockback, angle):
-	var initialVelocity = knockback * 10;
+	var initialVelocity = knockback * 0.3;
 	var verticalAngle = sin(angle * angleConversion);
 	var verticalVelocity = initialVelocity * verticalAngle;
 	verticalVelocity = round(verticalVelocity * 100000) / 100000;

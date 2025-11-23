@@ -73,7 +73,6 @@ func set_input_mode(mode: InputMode):
 			if input_buffer:
 				input_buffer.clear_all()
 				input_buffer.set_grace_period(10)
-				print("Set Grace Period for player entering gameplay")
 	
 func is_gameplay_mode() -> bool:
 	return current_input_mode == InputMode.GAMEPLAY

@@ -8,6 +8,7 @@ extends Node
 
 var current_3d_scene : Node
 var current_gui_scene
+var is_in_hitstop: bool = false
 
 var hit: bool = false
 
@@ -143,8 +144,14 @@ func restart_level_and_respawn() -> void:
 
 #-----HITSTOP-----
 func freeze_hitstop(frames: int):
-	Engine.time_scale = 0.001
-	get_tree().paused = true
-	await get_tree().create_timer(frames / 60.0, PROCESS_MODE_ALWAYS).timeout
-	Engine.time_scale = 1
-	get_tree().paused = false
+	#Engine.time_scale = 0.001
+	#get_tree().paused = true
+	#await get_tree().create_timer(frames / 60.0, PROCESS_MODE_ALWAYS).timeout
+	#Engine.time_scale = 1
+	#get_tree().paused = false
+	
+	var duration = frames/ 60.0
+	Engine.time_scale = 0.0
+	var timer = get_tree().create_timer(duration, true, false, true)
+	await timer.timeout
+	Engine.time_scale = 1.0

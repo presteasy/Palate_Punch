@@ -71,10 +71,11 @@ material = SubResource("StandardMaterial3D_2e4ns")
 
 [node name="Dummy" type="CharacterBody3D"]
 collision_layer = 8
-collision_mask = 114
+collision_mask = 115
 slide_on_ceiling = false
 script = ExtResource("1_2e4ns")
 weight = 100
+follow_speed = 3.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -97,20 +98,6 @@ unique_name_in_owner = true
 script = ExtResource("3_kpffn")
 metadata/_custom_type_script = "uid://n4wl06hgeu8e"
 
-[node name="Raycasts" type="Node" parent="."]
-
-[node name="GroundL" type="RayCast3D" parent="Raycasts"]
-unique_name_in_owner = true
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.332864, -0.567225, 0)
-collision_mask = 2
-debug_shape_custom_color = Color(0.894118, 0, 0, 1)
-
-[node name="GroundR" type="RayCast3D" parent="Raycasts"]
-unique_name_in_owner = true
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.324255, -0.567225, 0)
-collision_mask = 2
-debug_shape_custom_color = Color(0.894118, 0, 0, 1)
-
 [node name="StateLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28554, 0)
@@ -125,3 +112,23 @@ text = "100"
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6732769, 0)
 text = "0"
+
+[node name="Raycasts" type="Node3D" parent="."]
+
+[node name="GroundL" type="RayCast3D" parent="Raycasts"]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.332864, -0.567225, 0)
+collision_mask = 2
+debug_shape_custom_color = Color(0.894118, 0, 0, 1)
+
+[node name="GroundR" type="RayCast3D" parent="Raycasts"]
+unique_name_in_owner = true
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.324255, -0.567225, 0)
+collision_mask = 2
+debug_shape_custom_color = Color(0.894118, 0, 0, 1)
+
+[node name="BackRay" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -0.07815117, 0.239663, 0)
+
+[node name="FrontRay" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(-4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0, 1, 0.10941082, 0.45327556, 0)

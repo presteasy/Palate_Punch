@@ -66,6 +66,7 @@ var is_crouching: bool = false
 @export var air_dodge_speed = 500
 @export var special_jump_force = 700
 @export var max_jumps = 1
+@export var fastfall_speed_mult: float = 0.6
 var jump_squat = 3
 var air_jump = 0
 var fastfall = false
@@ -167,7 +168,4 @@ func collect(item):
 			#self.velocity.y = temp_vel.y
 			#temp_vel = Vector3.ZERO
 		#hit_pause_dur = 0
-		#hit_pause = 0
-
-func practice():
-	pass
+		#hit_pause = 

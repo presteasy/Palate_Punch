@@ -288,6 +288,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_mkaeh"]
 resource_name = "BAIR"
+length = 0.66667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -886,9 +887,14 @@ weight = 90
 run_speed = 7
 dash_speed = 8
 dash_duration = 8
-double_jump_force = 15
-fall_speed = 0.6
-max_fall_speed = 24
+jump_force = 9
+max_jump_force = 11
+double_jump_force = 13
+max_air_speed = 4.0
+air_accel = 3.0
+fall_speed = 0.45
+falling_speed = 10.0
+max_fall_speed = 22
 
 [node name="Graphics" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -943,6 +949,7 @@ metadata/_custom_type_script = "uid://n4wl06hgeu8e"
 [node name="InputBuffer" type="Node" parent="Frame Nodes"]
 unique_name_in_owner = true
 script = ExtResource("39_w7wk6")
+default_window_frames = 2
 metadata/_custom_type_script = "uid://hctx48buf3ic"
 
 [node name="HurtBox" type="CollisionShape3D" parent="."]
@@ -950,6 +957,9 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.19, 0)
 shape = SubResource("CapsuleShape3D_t0mfi")
 debug_color = Color(0.841144, 0.351356, 0.28334, 1)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96497726, 5.0064983)
 
 [node name="InventoryUI" parent="." instance=ExtResource("3_qkdr7")]
 process_mode = 3

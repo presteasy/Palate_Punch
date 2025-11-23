@@ -363,7 +363,7 @@ func get_transition(delta):
 						
 					return states.JUMP_SQUAT
 					
-				if parent.GroundL.is_colliding() and parent.GroundR.is_colliding():
+				if parent.GroundL.is_colliding() or parent.GroundR.is_colliding():
 					if parent.can_run:
 						var dash_x = Input.get_action_strength("right_%s" % id) - Input.get_action_strength("left_%s" % id)
 					
@@ -427,20 +427,22 @@ func get_transition(delta):
 					return states.JUMP_SQUAT
 					
 				var run_x = 0
-				if parent.can_run and Input.get_action_strength("left_%s" % id) and parent.GroundL.is_colliding() and parent.GroundR.is_colliding():
-					run_x = -Input.get_action_strength("left_%s" % id)
-					if parent.velocity.x <= 0:
-						parent.turn(true)
-					else:
-						framedata._frame()
-						return states.TURN
-				elif parent.can_run and Input.get_action_strength("right_%s" % id) and parent.GroundL.is_colliding() and parent.GroundR.is_colliding():
-					run_x = Input.get_action_strength("right_%s" % id)
-					if parent.velocity.x >= 0:
-						parent.turn(false)
-					else:
-						framedata._frame()
-						return states.TURN
+				if parent.can_run and Input.get_action_strength("left_%s" % id):
+					if parent.GroundL.is_colliding() or parent.GroundR.is_colliding():
+						run_x = -Input.get_action_strength("left_%s" % id)
+						if parent.velocity.x <= 0:
+							parent.turn(true)
+						else:
+							framedata._frame()
+							return states.TURN
+				elif parent.can_run and Input.get_action_strength("right_%s" % id):
+					if parent.GroundL.is_colliding() or parent.GroundR.is_colliding():
+						run_x = Input.get_action_strength("right_%s" % id)
+						if parent.velocity.x >= 0:
+							parent.turn(false)
+						else:
+							framedata._frame()
+							return states.TURN
 				else:
 					framedata._frame()
 					return states.STAND
@@ -861,7 +863,7 @@ func get_transition(delta):
 					pass
 					
 				if framedata.frame <= 5 and parent.current_direction != 0:
-					var lunge_speed = 3.0
+					var lunge_speed = 1.0
 					parent.velocity.x = parent.current_direction * lunge_speed
 					
 				if hb_atk_runner.PUNCH_01() == true:
@@ -921,7 +923,6 @@ func get_transition(delta):
 				if parent.is_on_floor():
 					parent.reset_jumps()
 					parent.velocity.y = 0
-					framedata.landing_lag_frames = 10
 					return states.LANDING
 
 			states.FAIR:
@@ -938,6 +939,7 @@ func get_transition(delta):
 				if parent.is_on_floor():
 					parent.reset_jumps()
 					parent.velocity.y = 0
+					framedata.landing_lag_frames = 10
 					return states.LANDING
 				
 			states.BAIR:
@@ -1247,8 +1249,12 @@ func AIREAL():
 			return false
 
 func AIRMOVEMENT():
-	if parent.velocity.y < parent.falling_speed:
+	if parent.velocity.y > -parent.falling_speed:
 		parent.velocity.y -= parent.fall_speed
+	
+	if parent.velocity.y > -2 and parent.velocity.y < 2:
+		parent.velocity.y -= parent.fall_speed* 0.5
+		
 	if Input.is_action_just_pressed("down_%s" % id) and parent.fastfall == false:
 		#if parent.velocity.y < 0 and parent.velocity.y > -2:
 		if parent.velocity.y < -2:
@@ -1257,10 +1263,10 @@ func AIRMOVEMENT():
 			print("Fastfall is ", parent.fastfall)
 	if parent.fastfall == true:
 		parent.set_collision_mask_value(7,false) #this is for platforms
-		parent.velocity.y = -parent.max_fall_speed
+		parent.velocity.y = -parent.max_fall_speed * parent.fastfall_speed_mult
 		framedata.landing_lag_frames = 0
 	if parent.fastfall == false:
-		framedata.landing_lag_frames = 10
+		framedata.landing_lag_frames = 5
 		
 	if  abs(parent.velocity.x) >=  abs(parent.max_air_speed):
 		if parent.velocity.x > 0:
@@ -1298,6 +1304,8 @@ func Landing():
 			framedata.frame = 0
 			if parent.velocity.y < 0:
 				parent.velocity.y = 0
+			input_buffer.clear_actions(["jump_%s" % id, "up_%s" % id, "attack_%s" % id])
+			
 			parent.fastfall = false
 			return true
 			

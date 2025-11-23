@@ -14,7 +14,9 @@ var selfState
 @onready var statemachine = %StateMachine
 @onready var anim = %AnimationPlayer
 
+var target: Node3D = null
 
+@export var follow_speed: float = 5
 
 @export_group("Aerial Movement")
 @export var max_air_speed = 6
@@ -36,12 +38,20 @@ var temp_vel = Vector3.ZERO
 
 func _ready() -> void:
 	SignalManager.hit_landed.connect(_on_hit_landed)
+	find_player()
 	
 func _physics_process(delta):
 	selfState = state_label.text
 	%Frames.text = str(framedata.frame)
 	percent_label.text = str(percentage)
 	
+	if not target or not is_instance_valid(target):
+		find_player()
+		return
+
+func is_grounded():
+	if GroundL.is_colliding() == true or GroundR.is_colliding() == true:
+		return true
 
 func _on_hit_landed() -> void:
 	print("hit landed")
@@ -61,3 +71,10 @@ func _hit_pause(delta):
 			temp_vel = Vector3.ZERO
 		hit_pause_dur = 0
 		hit_pause = 0
+
+func find_player():
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		for player in players:
+			target = player
+			return

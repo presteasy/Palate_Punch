@@ -11,8 +11,8 @@ func _physics_process(delta: float) -> void:
 	#print("🟢 _physics_process on node: ", get_path(), " | Parent: ", get_parent().name)
 	if state != null:
 		
-		var state_name = get_state_name()
-		print("Current State: ", state_name)
+		#var state_name = get_state_name()
+		#print("Current State: ", state_name)
 		
 		state_logic(delta)
 		var transition = get_transition(delta)

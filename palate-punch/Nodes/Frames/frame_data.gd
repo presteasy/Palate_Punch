@@ -29,9 +29,9 @@ func update_frames(delta: float) -> void:
 	#elif Input.is_action_pressed("block_%s" % parent.id):
 		#shield_buffer += floor(delta * 60)
 		
-	if hitstop_frames > 0:
-		hitstop_frames -= floor(delta * 60)
-	hitstop_frames = clampi(hitstop_frames, 0, hitstop_frames)
+	#if hitstop_frames > 0:
+		#hitstop_frames -= floor(delta * 60)
+	#hitstop_frames = clampi(hitstop_frames, 0, hitstop_frames)
 	
 func apply_hitstop_frames(duration: int) -> void:
 	hitstop_frames = duration
@@ -43,8 +43,8 @@ func _frame() -> void:
 	
 func _physics_process(delta: float) -> void:
 	if InputHandler.is_gameplay_mode() == true:
-		if hitstop_frames > 0:
-			hitstop_frames -= 1
+		#if hitstop_frames > 0:
+			#hitstop_frames -= 1
 		if input_buffer:
 			input_buffer.tick(frame)
 

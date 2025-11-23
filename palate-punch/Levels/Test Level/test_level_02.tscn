@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b65vm8ddowep7"]
+[gd_scene load_steps=7 format=3 uid="uid://b65vm8ddowep7"]
 
 [ext_resource type="Script" uid="uid://ckbt2x0ebhwhn" path="res://Levels/Test Level/test_level_02.gd" id="1_1nopq"]
 [ext_resource type="PackedScene" uid="uid://chnrc3150f51u" path="res://Nodes/Door/door.tscn" id="1_v64j4"]
+[ext_resource type="PackedScene" uid="uid://dsyony1kyvsin" path="res://Scenes/Dummy/dummy_01.tscn" id="3_vmu5g"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0xwrg"]
 size = Vector3(30, 1, 5)
@@ -49,3 +50,6 @@ light_specular = 0.0
 [node name="Door" parent="." instance=ExtResource("1_v64j4")]
 target_scene = "uid://dbph8hu5b5c2e"
 require_interact = true
+
+[node name="Dummy" parent="." instance=ExtResource("3_vmu5g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0994177, 0.5103972, 0)

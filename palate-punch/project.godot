@@ -141,6 +141,7 @@ special_1={
 3d_physics/layer_6="Ceiling"
 3d_physics/layer_7="Blast Zone"
 3d_physics/layer_8="Items"
+3d_physics/layer_9="Platform"
 
 [physics]
 
