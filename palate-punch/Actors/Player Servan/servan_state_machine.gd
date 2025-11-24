@@ -532,32 +532,34 @@ func get_transition(delta):
 					return states.STAND
 					
 			states.CRAWL:
+				AIRMOVEMENT()
 				if Input.is_action_just_pressed("jump_%s" % id):
 					framedata._frame()
 					return states.JUMP_SQUAT 
 					
-				var crawl_x = Input.get_action_strength("right_%s" % id) - Input.get_action_strength("left_%s" % id)
-				if crawl_x < 0:
-					if parent.velocity.x <= 0:
-						parent.turn(true)
-					else:
-						framedata._frame()
-						return states.TURN
-				elif crawl_x > 0:
-					if parent.velocity.x >= 0:
-						parent.turn(false)
-					else:
-						framedata._frame()
-						return states.TURN
-						
-				var crawl_vec = Vector3(crawl_x, 0, 0)
-				crawl_vec = crawl_vec.normalized()
+				if parent.GroundL.is_colliding() or parent.GroundR.is_colliding():
+					var crawl_x = Input.get_action_strength("right_%s" % id) - Input.get_action_strength("left_%s" % id)
+					if crawl_x < 0:
+						if parent.velocity.x <= 0:
+							parent.turn(true)
+						else:
+							framedata._frame()
+							return states.TURN
+					elif crawl_x > 0:
+						if parent.velocity.x >= 0:
+							parent.turn(false)
+						else:
+							framedata._frame()
+							return states.TURN
+							
+					var crawl_vec = Vector3(crawl_x, 0, 0)
+					crawl_vec = crawl_vec.normalized()
 
-				parent.velocity.x = crawl_vec.x * parent.crawl_speed
-				
-				if crawl_vec == Vector3.ZERO:
-					framedata._frame()
-					return states.STAND
+					parent.velocity.x = crawl_vec.x * parent.crawl_speed
+					
+					if crawl_vec == Vector3.ZERO:
+						framedata._frame()
+						return states.STAND
 				
 	#====== AERIAL MOVEMENT ======
 			states.AIR:

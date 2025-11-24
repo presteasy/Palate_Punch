@@ -71,7 +71,7 @@ material = SubResource("StandardMaterial3D_2e4ns")
 
 [node name="Dummy" type="CharacterBody3D"]
 collision_layer = 8
-collision_mask = 115
+collision_mask = 114
 slide_on_ceiling = false
 script = ExtResource("1_2e4ns")
 weight = 100

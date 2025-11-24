@@ -41,7 +41,6 @@ func get_transition(delta):
 			return states.AIR
 			
 		states.HITSTUN:
-			print("Dummy is HitSTUN!")
 			
 			if framedata.frame == 0:
 				if parent.has_meta("pending_kb_x"):
@@ -54,14 +53,10 @@ func get_transition(delta):
 						framedata._frame()
 						return states.STAND
 
-			if parent.knockback == null or parent.knockback == 0:
-				framedata._frame()
-				return states.STAND
+			print("Dummy is HitStun! Velocity: ", parent.velocity)
+
 			
-			if not is_nan(parent.velocity.x) or not is_nan(parent.velocity.y) or not is_nan(parent.velocity.z) or \
-			is_inf(parent.velocity.x) or is_inf(parent.velocity.y) or is_inf(parent.velocity.z):
-				print("⚠️ WARNING: Invalid velocity detected! Resetting...")
-				parent.velocity = Vector3.ZERO
+			if parent.knockback == null or parent.knockback == 0:
 				framedata._frame()
 				return states.STAND
 			
@@ -73,37 +68,41 @@ func get_transition(delta):
 				parent.velocity.x = 0
 			if abs(parent.velocity.y) < 0.1 and abs(parent.velocity.y) > -0.1:
 				parent.velocity.y = 0
+			
+			print(" After decay and gravity: ", parent.velocity)
+			
+			if parent.knockback >= 18 and parent.get_slide_collision_count() > 0:
+				var collision = parent.get_slide_collision(0)
+				var normal = collision.get_normal()
 				
+				var should_bounce = false
+				
+				if normal.y > 0.7:
+					if parent.velocity.y < -5:
+						should_bounce = true
+						print("SPIKE!!")
+					
+				elif normal.y < -0.7:
+					if parent.velocity.y > 5:
+						should_bounce = true
+						print("Bounce off Ceiling!")
+				
+				elif abs(normal.x) > 0.7:
+					if abs(parent.velocity.x) > 10:
+						should_bounce = true
+						print("Wall Bounce!")
+						
+				if should_bounce:
+					parent.velocity = parent.velocity.bounce(normal) * 0.8
+					parent.hitstun = round(parent.hitstun * 0.8)
+				
+				#if bounce_normal.length() > 0:
+					#parent.velocity = parent.velocity.bounce(bounce_normal) * 0.8
+					#parent.hitstun = round(parent.hitstun * 0.8)
+					#print("💥 Bounced off surface! New velocity: ", parent.velocity)
+					
+
 			AIRMOVEMENT()	
-			
-			#if framedata.frame > 0:
-				#if parent.velocity.y < 0:
-					#parent.velocity.y += parent.vdecay * 0.5
-					#parent.velocity.y = minf(parent.velocity.y, 0)
-			
-			#if parent.velocity.y < 0:
-				#parent.velocity.y += parent.vdecay * 0.5 * Engine.time_scale
-				#parent.velocity.y = minf(parent.velocity.y, 0)
-
-			#if parent.velocity.x < 0:
-				#parent.velocity.x += parent.hdecay * 0.4 * -1 * Engine.time_scale
-				#parent.velocity.x = minf(parent.velocity.x, 0)
-			#elif parent.velocity.x > 0:
-				#parent.velocity.x -= parent.hdecay * 0.4 * Engine.time_scale
-				#parent.velocity.x = minf(parent.velocity.x, 0)
-
-			if parent.knockback >= 18:
-				
-				var collision_count = parent.get_slide_collision_count()
-				if collision_count > 0:
-					var collision = parent.get_slide_collision(0)
-					var bounce_normal = collision.get_normal()
-					
-					if bounce_normal.length() > 0:
-						parent.velocity = parent.velocity.bounce(bounce_normal) * 0.8
-						parent.hitstun = round(parent.hitstun * 0.8)
-						print("💥 Bounced off surface! New velocity: ", parent.velocity)
-					
 
 			if framedata.frame >= parent.hitstun:
 				framedata._frame()
@@ -111,16 +110,6 @@ func get_transition(delta):
 			elif framedata.frame > 60 * 5:
 				framedata.frame()
 				return states.AIR
-			
-			#if framedata.frame >= parent.hitstun:
-				#if parent.knockback >= 24:
-					#framedata._frame()
-					#return states.AIR
-				#else:
-					#framedata._frame()
-					#return states.AIR
-			#elif framedata.frame > 60 * 5:
-				#return states.AIR
 
 
 		states.AIR:

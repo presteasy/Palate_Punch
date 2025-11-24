@@ -135,7 +135,11 @@ func Hitbox_Collide(body):
 	var charstate = body.get_node("StateMachine")
 	knockbackVal = knockback(body.percentage,damage,weight,kb_scaling,base_kb,1)
 	s_angle(body)
-	print("Knockback: ", knockbackVal)
+	if is_nan(angle) or is_inf(angle):
+		print("⚠️ Invalid angle after s_angle: ", angle, " - using default 45")
+		angle = 45
+	
+	print("Knockback: ", knockbackVal, " | Angle: ", angle)
 	
 	var kb_data = angle_flipperv2(Vector3(body.velocity.x, body.velocity.y, body.velocity.z), body.global_position)
 	print("   KB Data from angle_flipper ", angle_flipper, ": ", kb_data)
@@ -231,8 +235,27 @@ func knockback(p,d,w,ks,bk,r):
 	kb_scaling = ks
 	base_kb = bk
 	ratio = r
-	return ((((((((percentage/10) + (percentage*damage/20))*(200*1.4/(weight+100))) +18)*(kb_scaling))+base_kb)*1))
-
+	
+	print("   KB calc inputs: p=", p, " d=", d, " w=", w, " ks=", ks, " bk=", bk)
+	
+	var step1 = percentage/10
+	var step2 = percentage*damage/20
+	var step3 = step1 + step2
+	var step4 = 200*1.4/(weight+100)
+	var step5 = step3 * step4
+	var step6 = step5 + 18
+	var step7 = step6 * kb_scaling
+	var step8 = step7 + base_kb
+	
+	print("   KB calc steps: ", step1, ", ", step2, ", ", step3, ", ", step4, ", ", step5, ", ", step6, ", ", step7, ", ", step8)
+	
+	var result = step8
+	
+	if is_nan(result) or is_inf(result):
+		print("⚠️ KB calculation produced invalid result!")
+	
+	return result
+	
 func s_angle(body):
 		if angle == 361:
 			if knockbackVal > 28:
@@ -273,17 +296,31 @@ func getVerticalDecay (angle):
 	return abs(decay)
 
 func getHorizontalVelocity (knockback, angle): # Function gets the horizontal knockback speed with total knockback and angle
-	var initialVelocity = knockback * 0.3; #Gets the initial velocity by multiplying knockback by 30
-	var horizontalAngle = cos(angle * angleConversion); #Horizontal angle is calculated by cos formula, angle conversion puts the angle in Radians
-	var horizontalVelocity = initialVelocity * horizontalAngle; #Horizontal velocity is found by multiplying initial velocity by horizontal angle
-	horizontalVelocity = round(horizontalVelocity * 100000) / 100000; #Round to a whole number
-	return horizontalVelocity;
+	print("   getH input: kb=", knockback, " angle=", angle)
+	var initialVelocity = knockback * 0.4
+	var horizontalAngle = cos(angle * angleConversion)
+	var horizontalVelocity = initialVelocity * horizontalAngle
+	horizontalVelocity = round(horizontalVelocity * 100000) / 100000
+	
+	print("   getH result: ", horizontalVelocity, " (init=", initialVelocity, " hAngle=", horizontalAngle, ")")
+	
+	if is_nan(horizontalVelocity) or is_inf(horizontalVelocity):
+		print("⚠️ getHorizontalVelocity produced invalid result!")
+	
+	return horizontalVelocity
 
 func getVerticalVelocity (knockback, angle):
-	var initialVelocity = knockback * 0.3;
-	var verticalAngle = sin(angle * angleConversion);
-	var verticalVelocity = initialVelocity * verticalAngle;
-	verticalVelocity = round(verticalVelocity * 100000) / 100000;
+	print("   getV input: kb=", knockback, " angle=", angle)
+	var initialVelocity = knockback * 0.4
+	var verticalAngle = sin(angle * angleConversion)
+	var verticalVelocity = initialVelocity * verticalAngle
+	verticalVelocity = round(verticalVelocity * 100000) / 100000
+	
+	print("   getV result: ", verticalVelocity)
+	
+	if is_nan(verticalVelocity) or is_inf(verticalVelocity):
+		print("⚠️ getVerticalVelocity produced invalid result!")
+	
 	return verticalVelocity
 
 func rad2deg(radians: float) -> float:

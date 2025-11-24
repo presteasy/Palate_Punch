@@ -932,8 +932,7 @@ script = ExtResource("37_c8a24")
 metadata/_custom_type_script = "uid://cblnvanemuo3v"
 
 [node name="Test_Hitbox" type="CollisionShape3D" parent="Attacks"]
-transform = Transform3D(0.0138749, -0.999904, 0, 0.999904, 0.0138749, 0, 0, 0, 1, 0.0203898, -0.925037, 0)
-visible = false
+transform = Transform3D(0.0138749, -0.999904, 0, 0.999904, 0.0138749, 0, 0, 0, 1, 0.04480759, 0.8346479, 0)
 shape = SubResource("CapsuleShape3D_c8a24")
 debug_color = Color(0.271527, 0.662481, 0, 1)
 

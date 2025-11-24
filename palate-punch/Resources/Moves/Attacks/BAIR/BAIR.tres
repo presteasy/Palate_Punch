@@ -12,6 +12,7 @@ damage = 5.0
 angle = 45
 base_kb = 1.0
 kb_scaling = 1.0
+duration = 17.0
 type = "normal"
 points = Vector3(-0.737, -0.083, 0)
 angle_flipper = 3

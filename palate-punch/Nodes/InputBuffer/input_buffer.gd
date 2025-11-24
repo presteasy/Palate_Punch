@@ -48,7 +48,7 @@ func set_grace_period(frames: int) -> void:
 func _record_just_pressed() -> void:
 	if grace_period_frames > 0:
 		grace_period_frames -= 1
-		print("Grace period active, ignoring inputs")
+		#print("Grace period active, ignoring inputs")
 		return
 		
 	if InputHandler.current_input_mode == InputHandler.InputMode.UI:
