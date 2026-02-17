@@ -15,6 +15,8 @@ var active: bool = false
 
 @export var default_window_frames: int = 3
 
+func _ready() -> void:
+	pass
 
 func arm(actions: PackedStringArray):
 	watched_actions = actions
@@ -22,6 +24,7 @@ func arm(actions: PackedStringArray):
 
 
 func _process(_delta):
+	print(_buffer)
 	if not active:
 		return
 	#for a in watched_actions: #possible remove
@@ -65,6 +68,9 @@ func _record_just_pressed() -> void:
 			a.begins_with("down_")
 		)
 		
+		var window = default_window_frames
+		if a.begins_with("jump_"):
+			window = 8
 		
 		if is_directional:
 			var is_pressed = Input.is_action_pressed(a)
@@ -120,7 +126,7 @@ func consume(action: StringName) -> bool:
 
 	_consumed_at_frame[action] = current_frame
 	_buffer.erase(action)
-	#print("Consumed: ", action, " at frame", current_frame)
+	print("Consumed: ", action, " at frame", current_frame)
 	return true
 
 func clear_action(action: StringName) -> void:
